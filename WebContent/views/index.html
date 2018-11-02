@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+    <!--<![endif]-->
+    <!-- BEGIN HEAD -->
+
+    <head>
+        <meta charset="utf-8" />
+        <title>开发者学习实验平台-ETENIOT LABS-智城慧商</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+        <!-- END GLOBAL MANDATORY STYLES -->
+        <!-- BEGIN THEME GLOBAL STYLES -->
+        <link href="../assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+        <link href="../assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+        <!-- END THEME GLOBAL STYLES -->
+        <!-- BEGIN THEME LAYOUT STYLES -->
+        <link href="../assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
+        <link href="../assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+        <link href="../assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+         <link href="../assets/mydoc/css/style.css" rel="stylesheet" type="text/css" />
+        <!-- END THEME LAYOUT STYLES -->
+        <link rel="shortcut icon" href="favicon.ico" /> 
+    </head>
+    <!-- END HEAD --> 
+    <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-content-white">
+        <!-- BEGIN HEADER -->
+        <div class="page-header navbar navbar-fixed-top">
+            <!-- BEGIN HEADER INNER -->
+            <div class="page-header-inner ">
+                <!-- BEGIN LOGO -->
+                <div class="page-logo">
+                    <a href="#">
+                        <img src="../assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" /> </a>
+                    <div class="menu-toggler sidebar-toggler">
+                        <span></span>
+                    </div>
+                </div>
+                <!-- END LOGO -->
+                <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span></span>
+                </a>
+                <!-- END RESPONSIVE MENU TOGGLER -->
+                <!-- BEGIN TOP NAVIGATION MENU -->
+                <div class="top-menu">                    
+                    <ul class="nav navbar-nav pull-right">                        
+                        <!-- BEGIN USER LOGIN DROPDOWN -->
+                        <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                        <li class="dropdown dropdown-user">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <img alt="" class="img-circle" src="../assets/layouts/layout/img/avatar3_small.jpg" />
+                                <span class="username username-hide-on-mobile">管理员</span>
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-default">
+                                <li>
+                                    <a href="../deleteSession">
+                                        <i class="icon-key"></i>退出登录</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- END USER LOGIN DROPDOWN -->                        
+                    </ul>
+                </div>
+                <!-- END TOP NAVIGATION MENU -->
+            </div>
+            <!-- END HEADER INNER -->
+        </div>
+        <!-- END HEADER --> 
+        <div class="clearfix"> </div> 
+        <div class="page-container">
+            <!-- BEGIN SIDEBAR -->
+            <div class="page-sidebar-wrapper"> 
+                <div class="page-sidebar navbar-collapse collapse"> 
+                    <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px"> 
+                        <li class="sidebar-toggler-wrapper hide">
+                            <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                            <div class="sidebar-toggler">
+                                <span></span>
+                            </div>
+                            <!-- END SIDEBAR TOGGLER BUTTON -->
+                        </li>
+                        <li class="nav-item start nav-item-index   active open">
+                            <a href="index.html" class="nav-link nav-toggle">
+                                <i class="icon-home"></i>
+                                <span class="title">用户入门</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item start">
+                            <a href="../getCommodityInfos" class="nav-link nav-toggle">
+                                <i class="fa fa-camera-retro"></i>
+                                <span class="title">实验模块</span>
+                                <span class=""></span>
+                            </a>
+                        </li>    
+						<li class="nav-item start">
+                            <a href="devblog.html" class="nav-link nav-toggle">
+                                <i class="fa fa-camera-retro"></i>
+                                <span class="title">开发博客</span>
+                                <span class=""></span>
+                            </a>
+                        </li>
+                        <li class="nav-item start" id="sidebarUser" style="display:none">
+                            <a href="indexs.jsp" class="nav-link nav-toggle">
+                           		<i class="fa fa-camera-retro"></i>
+                                <span class="title">产品首页</span>
+                                <span class=""></span> 
+                            </a>
+                        </li>						
+                        <li class="nav-item start">
+                            <a href="about.html" class="nav-link nav-toggle">
+                                <i class="fa fa-suitcase"></i>
+                                <span class="title">关于 ETENIOT LABS</span>
+                                <span class="selected"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item start" id="viewUser1" style="display:none">
+                            <a href="management.jsp" class="nav-link nav-toggle">
+                                <i class="fa fa-suitcase"></i>
+                                <span class="title">分类管理</span>
+                                <span class=""></span>
+                            </a>
+                        </li>
+                        <li class="nav-item start" id="viewUser2" style="display:none">
+                            <a href="activation.jsp" class="nav-link nav-toggle">
+                                <i class="fa fa-suitcase"></i>
+                                <span class="title">序列码管理</span>
+                                <span class=""></span>
+                            </a>
+                        </li>
+                        <li class="nav-item start">
+                            <a href="datadownload.html" class="nav-link nav-toggle">
+                                <i class="fa fa-suitcase"></i>
+                                <span class="title">资料下载区</span>
+                                <span class=""></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- END SIDEBAR MENU --> 
+                </div>
+                <!-- END SIDEBAR -->
+            </div>
+            <!-- END SIDEBAR -->
+            <!-- BEGIN CONTENT -->
+            <div class="page-content-wrapper">
+                <!-- BEGIN CONTENT BODY -->
+                <div class="page-content">
+                    <!-- BEGIN PAGE HEADER-->
+                    
+                    <!-- BEGIN PAGE BAR -->
+                    <div class="page-bar">
+                        <ul class="page-breadcrumb">
+                            <li>
+                                <a href="">用户入门</a>
+                            </li>
+                        </ul>                        
+                    </div>
+                    <!-- END PAGE BAR -->
+                    <!-- BEGIN PAGE TITLE-->
+                    <h3 class="page-title"> <small></small> </h3>
+                    <!-- END PAGE TITLE-->
+                    
+                    <!-- row begin -->
+					    <div class="row">
+                            <div class="col-md-12 col-sm-12">						
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="icon-social-dribbble font-red"></i>
+                                            <span class="caption-subject font-red bold uppercase">您需要一个LABS会员号！</span>
+                                        </div>
+										
+                                        <div class="actions">
+                                            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                                <i class="icon-cloud-upload"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body"> 
+                                        <blockquote>
+                                            <p> 1、请进入实验模块购买平台提供的产品，购买产品后管理人员会为您分配LABS会员激活码和产品一起邮寄给您！</p>
+                                        </blockquote>
+                                        <blockquote>
+                                            <p> 2、拿到产品后，打开包装取出里面的LABS会员激活码阅读操作说明，在下方输入框输入激活码，进行账号激活！</p>
+                                            <small>
+                                                <cite title="Source Title">温馨提示</cite>
+                                            </small>
+                                        </blockquote> 
+                                            <div class="clearfix">
+                                         <div class="form-group">
+                                                <h5>如果您已经有了LABS会员号，请输入，并阅读以下内容！</h5>                                             
+                                                    <input type="text" id="labsnumber" class="form-control input-lg" placeholder="请输入激活码">  
+                                         </div> 
+                                         <div id="alert">
+                                         </div>
+                                        </div>
+                                    </div>
+                                </div>                                 
+                            </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">						
+                           <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="icon-social-dribbble font-blue"></i>
+                                            <span class="caption-subject font-blue bold uppercase">准备好测试的模块、SIM卡、测试环境！</span>
+                                        </div>
+										
+                                        <div class="actions">
+                                            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                                <i class="icon-cloud-upload"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <h3></h3>
+                                        <blockquote>
+                                            <p> 1、Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante. Duis mollis, est non commodo luctus, nisi erat porttitor ligula integer posuere erat a ante. </p>
+                                        </blockquote>
+                                        <blockquote>
+                                            <p> 2、Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante. </p>
+                                            <small >Someone famous
+                                                <cite title="Source Title">Source Title</cite>
+                                            </small>
+                                        </blockquote>
+                                        <div class="clearfix">
+                                            <blockquote class="pull-right">
+                                                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante. </p>
+                                                <small>Someone famous
+                                                    <cite title="Source Title">Source Title</cite>
+                                                </small>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>                                 
+                            </div>
+							<div class="col-md-12"> 
+                            <button id="enable" onclick="verify()" class="btn green btn-lg">我已经准备好了，开始 >>></button>
+                            <hr> </div>
+                        </div>
+                    </div>
+					
+                    <!-- row end -->
+                </div>              
+
+                <!-- END CONTENT BODY -->
+            </div>
+            <!-- END CONTENT -->
+          
+        <!-- END CONTAINER -->
+        <!-- BEGIN FOOTER -->
+        <div class="page-footer">
+            <div class="page-footer-inner">版权信息 2017-2018 湖南智城慧商信息技术有限公司
+            </div>
+            <div class="scroll-to-top">
+                <i class="icon-arrow-up"></i>
+                .
+            </div>
+        </div>
+        <!-- END FOOTER -->
+        <!--[if lt IE 9]>
+        <script src="../assets/global/plugins/respond.min.js"></script>
+        <script src="../assets/global/plugins/excanvas.min.js"></script> 
+        <![endif]-->
+        <!-- BEGIN CORE PLUGINS -->
+        <script src="../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+        <!-- END CORE PLUGINS -->
+        <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <script src="../assets/global/scripts/app.min.js" type="text/javascript"></script>
+        <!-- END THEME GLOBAL SCRIPTS -->
+        <!-- BEGIN THEME LAYOUT SCRIPTS -->
+        <script src="../assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
+        <!-- BEGIN 自定义JS -->
+        <script type="text/javascript">
+        $(function(){
+        	$.ajax({
+        		url:"../getUserDate",
+        		type:"get",
+        		data:null,
+        		success:function(date){
+        			var str = JSON.parse(date);
+        			if(str.user_auth == 1){
+        				var divset =  $("#sidebarUser");
+            			for (var i = 0; i<divset.length;i++) {
+            				   divset[i].style.display = "block";
+            			};
+        			}
+        			if(str.user_authority == 1){
+        				var view1 =  $("#viewUser1");
+            			for (var j = 0; j<view1.length;j++) {
+            				view1[j].style.display = "block";
+            			};
+            			var view2 =  $("#viewUser2");
+            			for (var k = 0; k<view2.length;k++) {
+            				view2[k].style.display = "block";
+            			};
+        			}
+        		}
+        	});
+        });
+        		function verify(){
+        	var number = $('#labsnumber').val();
+        	$.ajax({
+        		url:"../putLabsOne",
+        		type:"post",
+        		data:{"number":number},
+        		success:function(date){
+        			var aret = JSON.parse(date);
+        			if(aret){
+        				window.location.href = "indexs.jsp";
+        			}else{
+        				$('#alert').html('<strong>Error!</strong> 您输入的LABS会员号不存在，请检查是否输入错误。');
+            			var div = document.getElementById('alert');
+            			div.setAttribute("class", "alert alert-danger");
+        			}
+        		}
+        		
+        	})
+        }
+        </script>
+        <!-- end 自定义JS -->
+    </body>
+
+</html>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.DatasMapper">
+  <select id="selectByPrimaryKey" resultType="Datas">
+    select *
+    from datas
+    where ds_id = #{ds_id}
+  </select>
+  
+  <select id="getDatasByInfo" resultType="Datas">
+  	select * from datas 
+  	<where>
+            <if test="dev_codes != null">
+                dev_codes = #{dev_codes}
+            </if>
+    </where>
+     ORDER BY ds_time DESC LIMIT #{startIndex},#{pageSize}
+  </select>
+  
+  <select id="selectDatasByNewest" resultType="Datas">
+  	SELECT * FROM datas WHERE dev_codes = #{code} AND ds_Swtch = 1 ORDER BY ds_time DESC LIMIT 1
+  </select>
+  
+  <select id="getDatasCount" resultType="int">
+       SELECT COUNT(1) FROM datas WHERE dev_codes = #{dev_codes}
+  </select>
+  
+  <select id="selectTotalCount" resultType="int">
+  	SELECT COUNT(1) FROM datas WHERE pro_id = #{pro_id}
+  </select>
+  
+  <select id="selectTodayCount" resultType="int">
+  	SELECT COUNT(1) FROM datas WHERE pro_id = #{pro_id} AND TO_DAYS(ds_time) = TO_DAYS(NOW())
+  </select>
+  
+  <select id="selectByDatasEchar" resultType="Chat">
+  	<![CDATA[SELECT t3.days AS days,IFNULL(f.countNumber,0) AS zsum FROM
+		(SELECT t2.days AS days FROM		
+			(SELECT @cdate := DATE_ADD(@cdate,INTERVAL -1 DAY) days FROM 
+			(SELECT @cdate :=DATE_ADD(CURDATE(),INTERVAL +1 DAY)FROM datas ) t1 ORDER BY days ASC) t2 
+			WHERE DATE_SUB(CURDATE(), INTERVAL 20 DAY) <= DATE(t2.days)) t3
+			LEFT JOIN
+		(SELECT COUNT(1) AS countNumber,DATE_FORMAT(ds_time,'%Y-%m-%d') AS saa
+		FROM  datas WHERE pro_id = #{pro_id}
+ 		GROUP BY DATE_FORMAT(ds_time,'%Y-%m-%d')) f ON t3.days = f.saa]]>
+  </select>
+  
+  <select id="selectByDatasDateEchar" resultType="Chat">
+  	SELECT DATE_FORMAT(ds_time,'%Y-%m-%d') AS days, COUNT(1) AS zsum 
+	FROM datas 
+		WHERE pro_id = #{pro_id} AND ds_time BETWEEN #{begin} AND #{end}
+		GROUP BY DATE_FORMAT(ds_time,'%Y-%m-%d')
+  </select>
+  
+  <delete id="deleteByPrimaryKey">
+    delete from datas
+    where ds_id = #{ds_id}
+  </delete>
+  
+  <delete id="deleteByDatasinfo">
+    delete from datas
+    where 1=1
+    <if test="pro_id != null">
+      and	pro_id = #{pro_id}
+    </if>
+    <if test="dev_codes != null">
+      and  dev_codes = #{dev_codes}
+    </if>
+  </delete>
+  
+  <insert id="insertSelective">
+    insert into datas
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ds_id != null">
+        ds_id,
+      </if>
+      <if test="user_code != null">
+        user_code,
+      </if>
+      <if test="pro_id != null">
+      	pro_id,
+      </if>
+      <if test="dev_codes != null">
+        dev_codes,
+      </if>
+      <if test="ds_Swtch != null">
+        ds_Swtch,
+      </if>
+      <if test="ds_value != null">
+        ds_value,
+      </if>
+      <if test="ds_ip != null">
+        ds_ip,
+      </if>
+      <if test="ds_port != null">
+        ds_port,
+      </if>
+      <if test="ds_time != null">
+        ds_time,
+      </if>
+      <if test="ds_isnone != null">
+        ds_isnone,
+      </if>
+      <if test="ds_ispush != null">
+        ds_ispush,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ds_id != null">
+        #{ds_id},
+      </if>
+      <if test="user_code != null">
+        #{user_code},
+      </if>
+      <if test="pro_id != null">
+      	#{pro_id},
+      </if>
+      <if test="dev_codes != null">
+        #{dev_codes},
+      </if>
+      <if test="ds_Swtch != null">
+        #{ds_Swtch},
+      </if>
+      <if test="ds_value != null">
+        #{ds_value},
+      </if>
+      <if test="ds_ip != null">
+        #{ds_ip},
+      </if>
+      <if test="ds_port != null">
+        #{ds_port},
+      </if>
+      <if test="ds_time != null">
+        #{ds_time},
+      </if>
+      <if test="ds_isnone != null">
+        #{ds_isnone},
+      </if>
+      <if test="ds_ispush != null">
+        #{ds_ispush},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update datas
+    <set>
+      <if test="user_code != null">
+        user_code = #{user_code,jdbcType=VARCHAR},
+      </if>
+      <if test="dev_codes != null">
+        dev_codes = #{dev_code,jdbcType=VARCHAR},
+      </if>
+      <if test="ds_Swtch != null">
+        ds_Swtch = #{ds_Swtch,jdbcType=INTEGER},
+      </if>
+      <if test="ds_value != null">
+        ds_value = #{ds_value,jdbcType=VARCHAR},
+      </if>
+      <if test="ds_ip != null">
+        ds_ip = #{ds_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="ds_port != null">
+        ds_port = #{ds_port,jdbcType=VARCHAR},
+      </if>
+      <if test="ds_time != null">
+        ds_time = #{ds_time,jdbcType=INTEGER},
+      </if>
+      <if test="ds_isnone != null">
+        ds_isnone = #{ds_isnone,jdbcType=INTEGER},
+      </if>
+      <if test="ds_ispush != null">
+        ds_ispush = #{ds_ispush,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ds_id = #{ds_id,jdbcType=INTEGER}
+  </update>
+</mapper>

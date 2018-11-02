@@ -1,0 +1,398 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";float: left;}
+ul li{list-style:none}
+ul{margin-left:-40px}
+.baidu{width: 100%}
+.operation{width:280px;
+    height: 80px;
+    float: right;
+    position: absolute;
+    background-color: #fff;
+    left: 35px;
+    opacity: 0.9;
+    padding: 10px;}
+.operation input{width: 50px}
+.Report{width: 60px;height: 26px;line-height: 26px;margin-left: 35px;border-radius: 2px;color:#000}
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=mAKXa0I8w4gXF5x0yGAtOv1djidDUbIa"></script>
+<title>畜牧定位跟踪系统</title>
+</head>
+<body>
+<div class="baidu">
+<div id="allmap"></div>
+</div>
+
+<div class="operation">
+  上报时间间隔：<br><br>
+ <input id="order" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+  分钟<button class="Report" onclick="Issued()">确定</button>&nbsp;&nbsp;&nbsp;<button onclick="cancel()">取消轨迹</button>
+  <br><br>
+  
+</div>
+</body>
+</html>
+<script type="text/javascript" src="assets1/js/jquery.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+<script type="text/javascript">
+
+// 百度地图API功能
+var map = new BMap.Map("allmap");
+var maket;
+var ply;
+var number = [];
+map.centerAndZoom(new BMap.Point(112.88027777777778,28.194166666666668), 15);
+map.enableScrollWheelZoom(true);
+
+
+
+//var point = new BMap.Point(116.400244,39.92556);
+//var marker = new BMap.Marker(point);  // 创建标注
+//map.addOverlay(marker);              // 将标注添加到地图中
+
+//var label = new BMap.Label("我是文字标注哦",{offset:new BMap.Size(20,-10)});
+//marker.setLabel(label);
+
+$(function(){
+	ptInPolygon();
+	diishiq();
+	window.setInterval("diishiq()",100000); 
+})
+
+function diishiq(){
+		$.ajax({
+	       	 	url:"selectThelatestinfo",
+	        	type:"post",
+	        	data:null,
+	        	success:function(data){
+	            	console.log(data);
+	            	maket = JSON.parse(data);
+	            	showPoly(maket);
+	        	}
+			});	
+};
+
+function showPoly(pointList){
+	
+	var points = pointList;
+	
+	// 向地图添加标注
+	for( var i = 0;i < points.length; i++){
+	   	        
+	   var point = new BMap.Point(points[i].lon,points[i].lat);
+	   
+	   var result = BMapLib.GeoUtils.isPointInPolygon(point, ply);
+	   
+       if(result == true){
+    	   points[i].state = "正常";
+           //alert("点在多边形内");
+    	   var myIcon = new BMap.Icon("assets1/images/1.png", new BMap.Size(30,42), {});
+    	   // 创建标注对象并添加到地图 
+    	   var marker = new BMap.Marker(point,{icon: myIcon});
+    	   map.addOverlay(marker);
+    	   //将途经点按顺序添加到地图上
+    	   var label = new BMap.Label(points[i].macode,{offset:new BMap.Size(20,-10)});
+    	   marker.setLabel(label);
+    	   addInfoWindow(marker, points[i]);
+       } else {
+    	   points[i].state = "告警";
+           //alert("点在多边形外");
+    	   var myIcon1 = new BMap.Icon("assets1/images/2.png", new BMap.Size(30,42), {});
+    	   // 创建标注对象并添加到地图 
+    	   var marker1 = new BMap.Marker(point,{icon: myIcon1});
+    	   map.addOverlay(marker1);
+    	   //将途经点按顺序添加到地图上
+    	   var label = new BMap.Label(points[i].macode,{offset:new BMap.Size(20,-10)});
+    	   marker1.setLabel(label);
+    	   //面板功能
+    	   addInfoWindow(marker1, points[i]);
+    	   //alert(points[i].macode);
+    	   //通知后台设备出界
+    	   var index = $.inArray(points[i].macode,number);
+    	   
+    	   if(index < 0){
+    		   number.push(points[i].macode);
+    	   }
+       }
+	   // 创建标注对象并添加到地图 
+	   //var marker = new BMap.Marker(point,{icon: myIcon});
+	   //map.addOverlay(marker);
+	        
+	   //将途经点按顺序添加到地图上
+	   //var label = new BMap.Label(points[i].macode,{offset:new BMap.Size(20,-10)});
+	   //marker.setLabel(label);
+	        
+	   //addInfoWindow(marker, points[i]);
+	};
+	
+	$.ajax({
+		   url:"ReportWarning",
+		   type:"post",
+		   traditional:true,
+		   data:{"macode":number},
+		   success:function(data){
+			   
+		   }
+	});
+	
+};	
+
+//发送短信接口，通知牛不见
+function mcattle(){
+	console.log(number);
+	$.ajax({
+		   url:"ReportWarning",
+		   type:"post",
+		   traditional:true,
+		   data:{"macode":number},
+		   success:function(data){
+			   
+		   }
+	});
+};
+
+/*
+function showPoly(list,str){
+	    //map.clearOverlays();
+		for(var c=0;c<list.length;c++){
+	        var marker = new BMap.Marker(list[c]);  
+	        console.log(list[c])
+	        map.addOverlay(marker);
+	        //将途经点按顺序添加到地图上
+	        var label = new BMap.Label(str[c].macode,{offset:new BMap.Size(20,-10)});
+	        marker.setLabel(label);
+	        
+	        addInfoWindow(marker, str[c]);
+	        //addMarker(list[c]);
+	    }
+};
+*/
+function addMarker(points){  
+    
+    // 创建标注对象并添加到地图     
+    for(var i = 0,pointsLen = points.length;i <pointsLen;i++){  
+        var point = new BMap.Point(points[i].lon,points[i].lat);      
+        var  marker = new BMap.Marker(point);     
+        map.addOverlay(marker);   
+        //给标注点添加点击事件。使用立即执行函数和闭包  
+        (function() {  
+            var thePoint = points[i];  
+            marker.addEventListener("click",function(){  
+                showInfo(this,thePoint);  
+            });  
+        })();  
+  
+    }  
+  
+}    
+
+function showInfo(thisMaker,point){  
+    var sContent =  
+    '<ul style="margin:0 0 5px 0;padding:0.2em 0">'  
+    +'<li style="line-height: 26px;font-size: 15px;">'  
+    +'<span style="width: 80px;display: inline-block;">设备信息</span></li>'  
+    +'<li style="line-height: 26px;font-size: 15px;">'  
+    +'<span style="width: 100px;display: inline-block;">名称：</span>' + point.code + '</li>'  
+    +'</ul>';  
+    var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象  
+    thisMaker.openInfoWindow(infoWindow);   //图片加载完毕重绘infowindow  
+   } 
+
+function addInfoWindow(marker, poi) { 
+    //跳动动画    
+    //marker.setAnimation(BMAP_ANIMATION_BOUNCE);  
+    //pop弹窗标题    
+    var title = '<div style="font-weight:bold;color:#CE5521;font-size:14px">定位信息</div>';    
+    //pop弹窗信息    
+    var html = [];    
+    html.push('<ul>');       
+    html.push('<li>编码 &nbsp;:' + poi.macode + '</li>');
+    html.push('<li>牛龄 &nbsp;:1.5年</li>');
+    html.push('<li>经度 &nbsp;:' + poi.lon + '</li>');
+    html.push('<li>纬度 &nbsp;:' + poi.lat + '</li>');
+    html.push('<li>电量 &nbsp;:' + '90%' + '</li>');
+    html.push('<li>时间 &nbsp;:' + poi.time + '</li>');
+    html.push('<li>状态 &nbsp;:' + poi.state + '</li>');
+    html.push('<li>查看轨迹&nbsp;:<button onclick=lianxian('+poi.macode+')>查看轨迹</button></li>');
+    html.push('</ul>');    
+    var infoWindow = new BMap.InfoWindow(html.join(""),{title:title,width:160});  
+    //默认显示自己的信息窗口  
+    //marker.openInfoWindow(infoWindow);   
+    var openInfoWinFun = function () {    
+        marker.openInfoWindow(infoWindow);
+    };     
+    //点击坐标点切换信息窗口   
+    marker.addEventListener("click", openInfoWinFun);   
+    
+    //marker.addEventListener("click", selePlace(mis[c]));
+};
+
+//连曲线线功能
+function showPath(lims)
+{		
+    var driving = new BMap.DrivingRoute( map, {onSearchComplete: function(results){
+      	if (driving.getStatus() == BMAP_STATUS_SUCCESS){
+             var plan = driving.getResults().getPlan(0);
+             var  num = plan.getNumRoutes();
+             //alert("plan.num ："+num);
+             for(var j =0;j<num ;j++){
+              var pts= plan.getRoute(j).getPath();    //通过驾车实例，获得一系列点的数组
+              var polyline = new BMap.Polyline(pts);    
+              map.addOverlay(polyline); 
+             }
+      	}
+	}});
+    
+    for(var j=0;j<lims.length;j++){
+        var marker = new BMap.Marker(lims[j]);  
+        console.log(lims[j])
+        map.addOverlay(marker);
+        //将途经点按顺序添加到地图上
+        var label = new BMap.Label(j+1,{offset:new BMap.Size(20,-10)});
+        marker.setLabel(label);
+        
+        driving.search(lims[j],lims[j+1]);
+    }
+	 
+}
+
+function lianxian(milt){
+	
+	var miss = milt;
+	var lims = [];
+	$.ajax({
+		url:"selectByNearlyonehour",
+		type:"post",
+		data:{"plcode":miss},
+    	success:function(data){
+        	var str = JSON.parse(data);
+        	for (var i = 0; i < str.length; i++) {
+        		lims.push(new BMap.Point(str[i].lon,str[i].lat));
+			}
+        	addLine(lims);
+    	}
+	});
+}
+
+//连折线线功能
+function addLine(points) {
+    var linePoints = [], pointsLen = points.length, i, polyline;
+    if (pointsLen == 0) {
+      return;
+    }
+    // 创建标注对象并添加到地图
+    for (i = 0; i < pointsLen; i++) {
+    	var myIcon = new BMap.Icon("assets1/images/1.png", new BMap.Size(30,42), {
+            // 指定定位位置
+            // offset: new BMap.Size(10, 25),
+            // // 当需要从一幅较大的图片中截取某部分作为标注图标时，需要指定大图的偏移位置
+            // imageOffset: new BMap.Size(0, 0 - i * 25) // 设置图片偏移  
+        });
+    	var marker = new BMap.Marker(points[i],{icon: myIcon});  
+        map.addOverlay(marker);
+        //将途经点按顺序添加到地图上
+        //var label = new BMap.Label("",{offset:new BMap.Size(20,-10)});
+        //marker.setLabel(label);
+        
+      	linePoints.push(new BMap.Point(points[i].lng, points[i].lat));
+      	polyline = new BMap.Polyline(linePoints,
+        {strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.5});// 创建折线
+      	map.addOverlay(polyline); // 增加折线
+    }
+}
+
+//取消轨迹功能
+function cancel(){
+    map.clearOverlays()
+    showPoly(maket);
+};
+
+//下发功能
+function Issued(){
+	
+	var order = $('#order').val();
+	$.ajax({
+		url:"IssuedanOrder",
+		type:"post",
+		data:{"order":order},
+		success:function(data){
+ 			//var reult = JOSN.parse(data);
+    	}
+	})
+};
+
+//围栏功能
+/*
+function weilan(){
+	var polygon = new BMap.Polygon([
+	    new BMap.Point(112.883026,28.199149),
+	    new BMap.Point(112.882164,28.193037),
+
+	    new BMap.Point(112.884392,28.186478),
+	    new BMap.Point(112.890429,28.182403),
+	    new BMap.Point(112.90013,28.181065),
+	    new BMap.Point(112.905376,28.183103),
+	    new BMap.Point(112.906885,28.187497),
+
+	    new BMap.Point(112.910551,28.189216),
+	    new BMap.Point(112.910838,28.193482),
+	    new BMap.Point(112.916731,28.195902),
+	    new BMap.Point(112.914719,28.199022),
+	    new BMap.Point(112.912707,28.201951)
+
+	], {strokeColor:"red", strokeWeight:2, strokeOpacity:0.8,fillOpacity: 0.1});  //创建多边形
+	
+	map.addOverlay(polygon);
+};*/
+
+function ptInPolygon(){
+    var pts = [];
+    var pt1 = new BMap.Point(112.883026,28.199149);
+    var pt2 = new BMap.Point(112.882164,28.193037);
+    var pt3 = new BMap.Point(112.884392,28.186478);
+    var pt4 = new BMap.Point(112.890429,28.182403);
+    var pt5 = new BMap.Point(112.90013,28.181065);  
+    var pt6 = new BMap.Point(112.905376,28.183103);
+    var pt7 = new BMap.Point(112.906885,28.187497);
+    var pt8 = new BMap.Point(112.910551,28.189216);
+    var pt9 = new BMap.Point(112.910838,28.193482);
+    var pt10 = new BMap.Point(112.916731,28.195902);
+    var pt11 = new BMap.Point(112.914719,28.199022);
+    var pt12 = new BMap.Point(112.912707,28.201951);
+    
+    pts.push(pt1);
+    pts.push(pt2);
+    pts.push(pt3);
+    pts.push(pt4);
+    pts.push(pt5);
+    pts.push(pt6);
+    pts.push(pt7);
+    pts.push(pt8);
+    pts.push(pt9);
+    pts.push(pt10);
+    pts.push(pt11);
+    pts.push(pt12);
+    
+    ply = new BMap.Polygon(pts,{strokeColor:"red", strokeWeight:2, strokeOpacity:0.5,fillOpacity: 0.3});
+    
+    /* for (var i = 0; i < maket.length; i++) {
+    	var pt = new BMap.Point(maket[i].lon,maket[i].lat);
+    	
+    	var result = BMapLib.GeoUtils.isPointInPolygon(pt, ply);
+        if(result == true){
+            //alert("点在多边形内");
+        } else {
+            //alert("点在多边形外")
+        }
+	}
+    //演示：将面添加到地图上
+    
+    map.clearOverlays();
+    var mkr = new BMap.Marker(pt);
+    map.addOverlay(mkr);*/
+    map.addOverlay(ply);      
+};
+</script>

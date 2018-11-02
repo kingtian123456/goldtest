@@ -1,0 +1,10 @@
+/MyBatisConfig.xml
+/SpringContext.xml
+/SpringServlet.xml
+/com/
+/datasource.properties
+/ehcache.xml
+/generatorConfig.xml
+/log4j.properties
+/resource/
+/util/

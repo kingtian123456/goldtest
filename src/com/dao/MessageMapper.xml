@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.MessageMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Message">
+    <id column="ms_id" jdbcType="INTEGER" property="msId" />
+    <result column="news_id" jdbcType="INTEGER" property="newsId" />
+    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+    <result column="ms_content" jdbcType="VARCHAR" property="msContent" />
+    <result column="ms_layerid" jdbcType="INTEGER" property="msLayerid" />
+    <result column="ms_cretime" jdbcType="TIMESTAMP" property="msCretime" />
+    <association property="user" javaType="com.entity.User">
+    	<id column="user_id" property="user_id" />
+    	<result column="user_code" property="user_code"/>
+    	<result column="user_account" property="user_account" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    ms_id, news_id, user_code, ms_content, ms_layerid, ms_cretime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from message
+    where ms_id = #{msId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByMessageNewsOne" parameterType="java.util.Map" resultMap="BaseResultMap"> 
+  	SELECT * FROM message m LEFT JOIN user u ON m.user_code = u.user_code WHERE news_id = #{newsId} AND ms_layerid = #{layerId} LIMIT #{before},#{after}
+  </select>
+  
+  <select id="selectByMessageNewsIdCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	SELECT COUNT(1) FROM message WHERE news_id = #{newsId}
+  </select>
+  
+  <select id="selectByMessageNewsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT COUNT(1) FROM message WHERE 1 = 1
+  	<if test="newsId != null and newsId != '' ">
+  		AND news_id = #{newsId}
+  	</if>
+  	<if test="layerId != null and layerId != '' ">
+  		AND ms_layerid = #{layerId}
+  	</if>
+  </select>
+  
+  <select id="selectByMessageLevel" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM message m LEFT JOIN user u ON m.user_code = u.user_code WHERE ms_layerid = #{ayerid}
+  </select>
+  
+  <delete id="delectByNewsMage" parameterType="java.lang.Integer">
+  	delete from message
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from message
+    where ms_id = #{msId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Message">
+    insert into message (ms_id, news_id, user_code, 
+      ms_content, ms_layerid, ms_cretime
+      )
+    values (#{msId,jdbcType=INTEGER}, #{newsId,jdbcType=INTEGER}, #{userCode,jdbcType=VARCHAR}, 
+      #{msContent,jdbcType=VARCHAR}, #{msLayerid,jdbcType=INTEGER}, #{msCretime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Message">
+    insert into message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="msId != null">
+        ms_id,
+      </if>
+      <if test="newsId != null">
+        news_id,
+      </if>
+      <if test="userCode != null">
+        user_code,
+      </if>
+      <if test="msContent != null">
+        ms_content,
+      </if>
+      <if test="msLayerid != null">
+        ms_layerid,
+      </if>
+      <if test="msCretime != null">
+        ms_cretime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="msId != null">
+        #{msId,jdbcType=INTEGER},
+      </if>
+      <if test="newsId != null">
+        #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="userCode != null">
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="msContent != null">
+        #{msContent,jdbcType=VARCHAR},
+      </if>
+      <if test="msLayerid != null">
+        #{msLayerid,jdbcType=INTEGER},
+      </if>
+      <if test="msCretime != null">
+        #{msCretime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Message">
+    update message
+    <set>
+      <if test="newsId != null">
+        news_id = #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="userCode != null">
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="msContent != null">
+        ms_content = #{msContent,jdbcType=VARCHAR},
+      </if>
+      <if test="msLayerid != null">
+        ms_layerid = #{msLayerid,jdbcType=INTEGER},
+      </if>
+      <if test="msCretime != null">
+        ms_cretime = #{msCretime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ms_id = #{msId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Message">
+    update message
+    set news_id = #{newsId,jdbcType=INTEGER},
+      user_code = #{userCode,jdbcType=VARCHAR},
+      ms_content = #{msContent,jdbcType=VARCHAR},
+      ms_layerid = #{msLayerid,jdbcType=INTEGER},
+      ms_cretime = #{msCretime,jdbcType=TIMESTAMP}
+    where ms_id = #{msId,jdbcType=INTEGER}
+  </update>
+</mapper>

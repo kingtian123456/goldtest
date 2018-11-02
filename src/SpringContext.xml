@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd      
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd    
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 启动AOP支持 -->
+	<context:component-scan base-package="com">
+	    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<!-- 引入外部数据源配置信息 -->
+	 
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<value>classpath:datasource.properties</value>
+		</property>
+	</bean>
+
+	<!-- 配置数据源，使用的是dbcp数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc.url}" ></property>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		<property name="initialSize" value="5" ></property><!-- 配置初始化连接池数量-->
+		<property name="minIdle" value="5" /><!-- 配置最小连接池数量-->
+		<property name="maxActive" value="30" /><!-- 配置最大连接池数量-->
+		<property name="maxWait" value="60000" /><!-- 配置获取连接等待超时的时间 单位毫秒-->
+		<property name="useUnfairLock" value="true"/><!--使用非公平锁-->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" /><!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" /><!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="validationQuery" value="SELECT COUNT(1) FROM classfiy" /><!--用来检测连接是否有效的sql，要求是一个查询语句。-->
+		<property name="testWhileIdle" value="true" /><!--申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。-->
+		<property name="testOnBorrow" value="false" /><!--申请连接时执行validationQuery检测连接是否有效，-->
+		<property name="testOnReturn" value="false" /><!--归还连接时执行validationQuery检测连接是否有效，-->
+		<property name="poolPreparedStatements" value="true" /><!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="maxOpenPreparedStatements" value="20" />
+	</bean>
+
+	<!-- 配置Session工厂 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!--dataSource属性指定要用到的连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<!--configLocation属性指定mybatis的核心配置文件 -->
+		<property name="configLocation" value="classpath:MyBatisConfig.xml" />
+		<!-- 自动扫描需要定义类别名的包，将包内的JAVA类的类名作为类别名 -->
+		<property name="typeAliasesPackage" value="com.entity"></property>
+	</bean>
+
+	<!-- 自动扫描所有的Mapper接口与文件 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.dao"></property>
+	</bean>  
+
+	<!-- 配置事务管理器 -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<!-- 事务属性的配置 -->
+    <tx:advice id="txAdvice" transaction-manager="txManager">        
+        <tx:attributes>            
+            <tx:method name="select*" read-only="true" propagation="SUPPORTS"/>            
+            <tx:method name="insert*" rollback-for="java.sql.SQLException"/>
+            <tx:method name="update*"/>
+            <tx:method name="delete*"/>
+        </tx:attributes>
+    </tx:advice>
+    
+    <aop:config>
+        <aop:pointcut id="hehe" expression="execution(public * com.services..*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="hehe"/>
+    </aop:config>
+
+	<!-- 配置上传文件 -->
+	<bean id="multipartResolver"
+		class="util.CustomMultipartResolver"
+	><!-- class="org.springframework.web.multipart.commons.CommonsMultipartResolver" -->
+		<property name="defaultEncoding" value="utf-8"></property>
+		<property name="maxUploadSize" value="3221225472"></property>
+		<property name="maxInMemorySize" value="819200"></property>
+	</bean>
+
+	<context:annotation-config />
+
+</beans>

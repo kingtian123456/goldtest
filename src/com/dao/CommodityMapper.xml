@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.CommodityMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Commodity">
+    <id column="com_id" jdbcType="INTEGER" property="comId" />
+    <result column="sort_id" jdbcType="INTEGER" property="sortId" />
+    <result column="com_title" jdbcType="VARCHAR" property="comTitle" />
+    <result column="com_intro" jdbcType="VARCHAR" property="comIntro" />
+    <result column="com_author" jdbcType="VARCHAR" property="comAuthor" />
+    <result column="com_keyword" jdbcType="VARCHAR" property="comKeyword" />
+    <result column="com_linkurl" jdbcType="VARCHAR" property="comLinkurl" />
+    <result column="com_stock" jdbcType="INTEGER" property="comStock" />
+    <result column="com_printurl" jdbcType="VARCHAR" property="comPrinturl" />
+    <result column="com_cretime" jdbcType="TIMESTAMP" property="comCretime" />
+    <association property="sort" javaType="com.entity.Sort">
+    	<id column="sort_id" jdbcType="INTEGER" property="sortId" />
+    	<result column="sort_depth" jdbcType="INTEGER" property="sortDepth" />
+    	<result column="sort_type" jdbcType="INTEGER" property="sortType" />
+    	<result column="sort_parentid" jdbcType="INTEGER" property="sortParentid" />
+    	<result column="sort_name" jdbcType="VARCHAR" property="sortName" />
+    	<result column="sort_stats" jdbcType="INTEGER" property="sortStats" />
+    	<result column="sort_seachkey" jdbcType="VARCHAR" property="sortSeachkey" />
+    	<result column="sort_orders" jdbcType="INTEGER" property="sortOrders" />
+    	<result column="sort_remark" jdbcType="VARCHAR" property="sortRemark" />
+    	<result column="sort_dir" jdbcType="VARCHAR" property="sortDir" />
+    	<result column="sort_linkurl" jdbcType="VARCHAR" property="sortLinkurl" />
+    	<result column="sort_content" jdbcType="VARCHAR" property="sortContent" />
+    	<result column="sort_isshow" jdbcType="INTEGER" property="sortIsshow" />
+    	<result column="sort_uptime" jdbcType="TIMESTAMP" property="sortUptime" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    com_id, sort_id, com_title, com_intro, com_author, com_keyword, com_linkurl, com_stock, 
+    com_printurl, com_cretime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from commodity
+    where com_id = #{comId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByCommodityInfo" resultMap="BaseResultMap">
+  	SELECT * FROM commodity c LEFT JOIN sort s ON c.sort_id = s.sort_id
+  </select>
+  
+  <select id="selectBySortIdCommodityInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM commodity WHERE sort_id = #{sortId}
+  </select>
+  
+  <delete id="deleteByCommoditSort" parameterType="java.lang.Integer">
+  	delete from commodity
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from commodity
+    where com_id = #{comId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Commodity">
+    insert into commodity (com_id, sort_id, com_title, 
+      com_intro, com_author, com_keyword, 
+      com_linkurl, com_stock, com_printurl, 
+      com_cretime)
+    values (#{comId,jdbcType=INTEGER}, #{sortId,jdbcType=INTEGER}, #{comTitle,jdbcType=VARCHAR}, 
+      #{comIntro,jdbcType=VARCHAR}, #{comAuthor,jdbcType=VARCHAR}, #{comKeyword,jdbcType=VARCHAR}, 
+      #{comLinkurl,jdbcType=VARCHAR}, #{comStock,jdbcType=INTEGER}, #{comPrinturl,jdbcType=VARCHAR}, 
+      #{comCretime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Commodity">
+    insert into commodity
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="comId != null">
+        com_id,
+      </if>
+      <if test="sortId != null">
+        sort_id,
+      </if>
+      <if test="comTitle != null">
+        com_title,
+      </if>
+      <if test="comIntro != null">
+        com_intro,
+      </if>
+      <if test="comAuthor != null">
+        com_author,
+      </if>
+      <if test="comKeyword != null">
+        com_keyword,
+      </if>
+      <if test="comLinkurl != null">
+        com_linkurl,
+      </if>
+      <if test="comStock != null">
+        com_stock,
+      </if>
+      <if test="comPrinturl != null">
+        com_printurl,
+      </if>
+      <if test="comCretime != null">
+        com_cretime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="comId != null">
+        #{comId,jdbcType=INTEGER},
+      </if>
+      <if test="sortId != null">
+        #{sortId,jdbcType=INTEGER},
+      </if>
+      <if test="comTitle != null">
+        #{comTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="comIntro != null">
+        #{comIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="comAuthor != null">
+        #{comAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="comKeyword != null">
+        #{comKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="comLinkurl != null">
+        #{comLinkurl,jdbcType=VARCHAR},
+      </if>
+      <if test="comStock != null">
+        #{comStock,jdbcType=INTEGER},
+      </if>
+      <if test="comPrinturl != null">
+        #{comPrinturl,jdbcType=VARCHAR},
+      </if>
+      <if test="comCretime != null">
+        #{comCretime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Commodity">
+    update commodity
+    <set>
+      <if test="sortId != null">
+        sort_id = #{sortId,jdbcType=INTEGER},
+      </if>
+      <if test="comTitle != null">
+        com_title = #{comTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="comIntro != null">
+        com_intro = #{comIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="comAuthor != null">
+        com_author = #{comAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="comKeyword != null">
+        com_keyword = #{comKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="comLinkurl != null">
+        com_linkurl = #{comLinkurl,jdbcType=VARCHAR},
+      </if>
+      <if test="comStock != null">
+        com_stock = #{comStock,jdbcType=INTEGER},
+      </if>
+      <if test="comPrinturl != null">
+        com_printurl = #{comPrinturl,jdbcType=VARCHAR},
+      </if>
+      <if test="comCretime != null">
+        com_cretime = #{comCretime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where com_id = #{comId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Commodity">
+    update commodity
+    set sort_id = #{sortId,jdbcType=INTEGER},
+      com_title = #{comTitle,jdbcType=VARCHAR},
+      com_intro = #{comIntro,jdbcType=VARCHAR},
+      com_author = #{comAuthor,jdbcType=VARCHAR},
+      com_keyword = #{comKeyword,jdbcType=VARCHAR},
+      com_linkurl = #{comLinkurl,jdbcType=VARCHAR},
+      com_stock = #{comStock,jdbcType=INTEGER},
+      com_printurl = #{comPrinturl,jdbcType=VARCHAR},
+      com_cretime = #{comCretime,jdbcType=TIMESTAMP}
+    where com_id = #{comId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ClassfiyMapper">
+  <select id="selectByPrimaryKey" resultType="Classfiy">
+    select *
+    from classfiy
+    where clas_id = #{clasId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPrimaryinfo" resultType="Classfiy">
+  	select * from classfiy
+  </select>
+  
+  <delete id="deleteByPrimaryKey">
+    delete from classfiy
+    where clas_id = #{clasId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert">
+    insert into classfiy (clas_id, clas_type, clas_lev, 
+      clas_fid, clas_name, clas_text, 
+      clas_order, clas_time)
+    values (#{clasId,jdbcType=INTEGER}, #{clasType,jdbcType=INTEGER}, #{clasLev,jdbcType=INTEGER}, 
+      #{clasFid,jdbcType=INTEGER}, #{clasName,jdbcType=VARCHAR}, #{clasText,jdbcType=VARCHAR}, 
+      #{clasOrder,jdbcType=INTEGER}, #{clasTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective">
+    insert into classfiy
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clasId != null">
+        clas_id,
+      </if>
+      <if test="clasType != null">
+        clas_type,
+      </if>
+      <if test="clasLev != null">
+        clas_lev,
+      </if>
+      <if test="clasFid != null">
+        clas_fid,
+      </if>
+      <if test="clasName != null">
+        clas_name,
+      </if>
+      <if test="clasText != null">
+        clas_text,
+      </if>
+      <if test="clasOrder != null">
+        clas_order,
+      </if>
+      <if test="clasTime != null">
+        clas_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clasId != null">
+        #{clasId,jdbcType=INTEGER},
+      </if>
+      <if test="clasType != null">
+        #{clasType,jdbcType=INTEGER},
+      </if>
+      <if test="clasLev != null">
+        #{clasLev,jdbcType=INTEGER},
+      </if>
+      <if test="clasFid != null">
+        #{clasFid,jdbcType=INTEGER},
+      </if>
+      <if test="clasName != null">
+        #{clasName,jdbcType=VARCHAR},
+      </if>
+      <if test="clasText != null">
+        #{clasText,jdbcType=VARCHAR},
+      </if>
+      <if test="clasOrder != null">
+        #{clasOrder,jdbcType=INTEGER},
+      </if>
+      <if test="clasTime != null">
+        #{clasTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update classfiy
+    <set>
+      <if test="clasType != null">
+        clas_type = #{clasType,jdbcType=INTEGER},
+      </if>
+      <if test="clasLev != null">
+        clas_lev = #{clasLev,jdbcType=INTEGER},
+      </if>
+      <if test="clasFid != null">
+        clas_fid = #{clasFid,jdbcType=INTEGER},
+      </if>
+      <if test="clasName != null">
+        clas_name = #{clasName,jdbcType=VARCHAR},
+      </if>
+      <if test="clasText != null">
+        clas_text = #{clasText,jdbcType=VARCHAR},
+      </if>
+      <if test="clasOrder != null">
+        clas_order = #{clasOrder,jdbcType=INTEGER},
+      </if>
+      <if test="clasTime != null">
+        clas_time = #{clasTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where clas_id = #{clasId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey">
+    update classfiy
+    set clas_type = #{clasType,jdbcType=INTEGER},
+      clas_lev = #{clasLev,jdbcType=INTEGER},
+      clas_fid = #{clasFid,jdbcType=INTEGER},
+      clas_name = #{clasName,jdbcType=VARCHAR},
+      clas_text = #{clasText,jdbcType=VARCHAR},
+      clas_order = #{clasOrder,jdbcType=INTEGER},
+      clas_time = #{clasTime,jdbcType=TIMESTAMP}
+    where clas_id = #{clasId,jdbcType=INTEGER}
+  </update>
+</mapper>

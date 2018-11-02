@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+    <!--<![endif]-->
+    <!-- BEGIN HEAD -->
+
+    <head>
+        <meta charset="utf-8" />
+        <title>淘宝购买导航</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        </head>
+    <!-- END HEAD -->
+
+    	<body>
+    		<iframe id="iframe" src="" style="width:1324px;height:900px;"></iframe>
+        <!-- BEGIN CORE PLUGINS -->
+        <script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+       	 	$(function(){
+       	 		getParam();
+        	});
+       	 	
+       	 	function getParam(){
+       			var C1 = window.location.href;
+       			//var C2 = C1.split("=")[1]; //得到楼主
+       			var c2 = C1.substring(C1.indexOf("?")+1);
+       			var c3 = c2.substring(7);
+       			document.getElementById("iframe").src = c3;
+       		}
+        	
+        </script>
+        <!-- END THEME LAYOUT SCRIPTS -->
+    </body>
+
+</html>

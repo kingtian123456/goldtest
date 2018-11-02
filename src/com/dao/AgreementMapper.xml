@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.AgreementMapper">
+
+  <select id="selectByPrimaryKey" resultType="Agreement">
+    select * from agreement
+    where at_id = #{atId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPrimaryinfo" resultType="Agreement">
+    select * from agreement
+  </select>
+  
+  <delete id="deleteByPrimaryKey">
+    delete from agreement
+    where at_id = #{atId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert">
+    insert into agreement (at_id, at_name, at_text, 
+      at_inip, at_port, at_intime
+      )
+    values (#{atId,jdbcType=INTEGER}, #{atName,jdbcType=VARCHAR}, #{atText,jdbcType=VARCHAR}, 
+      #{atInip,jdbcType=VARCHAR}, #{atPort,jdbcType=VARCHAR}, #{atIntime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective">
+    insert into agreement
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="atId != null">
+        at_id,
+      </if>
+      <if test="atName != null">
+        at_name,
+      </if>
+      <if test="atText != null">
+        at_text,
+      </if>
+      <if test="atInip != null">
+        at_inip,
+      </if>
+      <if test="atPort != null">
+        at_port,
+      </if>
+      <if test="atIntime != null">
+        at_intime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="atId != null">
+        #{atId,jdbcType=INTEGER},
+      </if>
+      <if test="atName != null">
+        #{atName,jdbcType=VARCHAR},
+      </if>
+      <if test="atText != null">
+        #{atText,jdbcType=VARCHAR},
+      </if>
+      <if test="atInip != null">
+        #{atInip,jdbcType=VARCHAR},
+      </if>
+      <if test="atPort != null">
+        #{atPort,jdbcType=VARCHAR},
+      </if>
+      <if test="atIntime != null">
+        #{atIntime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update agreement
+    <set>
+      <if test="atName != null">
+        at_name = #{atName,jdbcType=VARCHAR},
+      </if>
+      <if test="atText != null">
+        at_text = #{atText,jdbcType=VARCHAR},
+      </if>
+      <if test="atInip != null">
+        at_inip = #{atInip,jdbcType=VARCHAR},
+      </if>
+      <if test="atPort != null">
+        at_port = #{atPort,jdbcType=VARCHAR},
+      </if>
+      <if test="atIntime != null">
+        at_intime = #{atIntime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where at_id = #{atId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey">
+    update agreement
+    set at_name = #{atName,jdbcType=VARCHAR},
+      at_text = #{atText,jdbcType=VARCHAR},
+      at_inip = #{atInip,jdbcType=VARCHAR},
+      at_port = #{atPort,jdbcType=VARCHAR},
+      at_intime = #{atIntime,jdbcType=TIMESTAMP}
+    where at_id = #{atId,jdbcType=INTEGER}
+  </update>
+</mapper>

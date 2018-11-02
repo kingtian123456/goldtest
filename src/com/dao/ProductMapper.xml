@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ProductMapper">	
+  <select id="selectByPrimaryKey" resultType="Product">
+    select *
+    from product
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectBymaryinfo" resultType="Product">
+  	SELECT * FROM  product p WHERE user_code = #{code} LIMIT #{before},#{after}
+  </select>
+  
+  <select id="selectByProductall" resultType="Product">
+  	SELECT * FROM  product p LEFT JOIN agreement t ON p.pro_contype = t.at_id WHERE user_code = #{code} LIMIT #{before},#{after}
+  </select>
+  
+  <select id="selectBymaryCount" resultType="int">
+  	SELECT count(1) FROM  product p WHERE user_code = #{code}
+  </select>
+  
+  <delete id="deleteByPrimaryKey">
+    delete from product
+    where pro_id = #{pro_id}
+  </delete>
+  <insert id="insert">
+    insert into product (pro_id, user_code, pro_name, 
+      pro_text, pro_model, pro_devb, 
+      pro_sensor, pro_industry, pro_type, 
+      pro_bat, pro_contype, pro_protocol, 
+      dvg_devnum, pro_intime, pro_edtime
+      )
+    values (#{proId,jdbcType=INTEGER}, #{userCode,jdbcType=VARCHAR}, #{proName,jdbcType=VARCHAR}, 
+      #{proText,jdbcType=VARCHAR}, #{proModel,jdbcType=INTEGER}, #{proDevb,jdbcType=INTEGER}, 
+      #{proSensor,jdbcType=INTEGER}, #{proIndustry,jdbcType=INTEGER}, #{proType,jdbcType=INTEGER}, 
+      #{proBat,jdbcType=INTEGER}, #{proContype,jdbcType=INTEGER}, #{proProtocol,jdbcType=INTEGER}, 
+      #{dvgDevnum,jdbcType=INTEGER}, #{proIntime,jdbcType=TIMESTAMP}, #{proEdtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective">
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pro_id != null">
+        pro_id,
+      </if>
+      <if test="user_code != null">
+        user_code,
+      </if>
+      <if test="pro_name != null">
+        pro_name,
+      </if>
+      <if test="pro_text != null">
+        pro_text,
+      </if>
+      <if test="pro_model != null">
+        pro_model,
+      </if>
+      <if test="pro_devb != null">
+        pro_devb,
+      </if>
+      <if test="pro_sensor != null">
+        pro_sensor,
+      </if>
+      <if test="pro_industry != null">
+        pro_industry,
+      </if>
+      <if test="pro_type != null">
+        pro_type,
+      </if>
+      <if test="pro_bat != null">
+        pro_bat,
+      </if>
+      <if test="pro_contype != null">
+        pro_contype,
+      </if>
+      <if test="pro_protocol != null">
+        pro_protocol,
+      </if>
+      <if test="dvg_devnum != null">
+        dvg_devnum,
+      </if>
+      <if test="pro_intime != null">
+        pro_intime,
+      </if>
+      <if test="pro_edtime != null">
+        pro_edtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pro_id != null">
+        #{pro_id},
+      </if>
+      <if test="user_code != null">
+        #{user_code},
+      </if>
+      <if test="pro_name != null">
+        #{pro_name},
+      </if>
+      <if test="pro_text != null">
+        #{pro_text},
+      </if>
+      <if test="pro_model != null">
+        #{pro_model},
+      </if>
+      <if test="pro_devb != null">
+        #{pro_devb},
+      </if>
+      <if test="pro_sensor != null">
+        #{pro_sensor},
+      </if>
+      <if test="pro_industry != null">
+        #{pro_industry},
+      </if>
+      <if test="pro_type != null">
+        #{pro_type},
+      </if>
+      <if test="pro_bat != null">
+        #{pro_bat},
+      </if>
+      <if test="pro_contype != null">
+        #{pro_contype},
+      </if>
+      <if test="pro_protocol != null">
+        #{pro_protocol},
+      </if>
+      <if test="dvg_devnum != null">
+        #{dvg_devnum},
+      </if>
+      <if test="pro_intime != null">
+        #{pro_intime},
+      </if>
+      <if test="pro_edtime != null">
+        #{pro_edtime},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update product
+    <set>
+      <if test="user_code != null">
+        user_code = #{user_code},
+      </if>
+      <if test="pro_name != null">
+        pro_name = #{pro_name},
+      </if>
+      <if test="pro_text != null">
+        pro_text = #{pro_text},
+      </if>
+      <if test="pro_model != null">
+        pro_model = #{pro_model},
+      </if>
+      <if test="pro_devb != null">
+        pro_devb = #{pro_devb},
+      </if>
+      <if test="pro_sensor != null">
+        pro_sensor = #{pro_sensor},
+      </if>
+      <if test="pro_industry != null">
+        pro_industry = #{pro_industry},
+      </if>
+      <if test="pro_type != null">
+        pro_type = #{pro_type},
+      </if>
+      <if test="pro_bat != null">
+        pro_bat = #{pro_bat},
+      </if>
+      <if test="pro_contype != null">
+        pro_contype = #{pro_contype},
+      </if>
+      <if test="pro_protocol != null">
+        pro_protocol = #{pro_protocol},
+      </if>
+      <if test="dvg_devnum != null">
+        dvg_devnum = #{dvg_devnum},
+      </if>
+      <if test="pro_intime != null">
+        pro_intime = #{pro_intime},
+      </if>
+      <if test="pro_edtime != null">
+        pro_edtime = #{pro_edtime},
+      </if>
+    </set>
+    where pro_id = #{pro_id}
+  </update>
+  <update id="updateByPrimaryKey">
+    update product
+    set user_code = #{userCode,jdbcType=VARCHAR},
+      pro_name = #{proName,jdbcType=VARCHAR},
+      pro_text = #{proText,jdbcType=VARCHAR},
+      pro_model = #{proModel,jdbcType=INTEGER},
+      pro_devb = #{proDevb,jdbcType=INTEGER},
+      pro_sensor = #{proSensor,jdbcType=INTEGER},
+      pro_industry = #{proIndustry,jdbcType=INTEGER},
+      pro_type = #{proType,jdbcType=INTEGER},
+      pro_bat = #{proBat,jdbcType=INTEGER},
+      pro_contype = #{proContype,jdbcType=INTEGER},
+      pro_protocol = #{proProtocol,jdbcType=INTEGER},
+      dvg_devnum = #{dvgDevnum,jdbcType=INTEGER},
+      pro_intime = #{proIntime,jdbcType=TIMESTAMP},
+      pro_edtime = #{proEdtime,jdbcType=TIMESTAMP}
+    where pro_id = #{proId,jdbcType=INTEGER}
+  </update>
+</mapper>

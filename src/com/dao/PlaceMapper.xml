@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.PlaceMapper">
+  <select id="selectByPrimaryKey" resultType="Place">
+    select * from place
+    where plid = #{plid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPrThelatestKey" resultType="Place">
+  	SELECT * FROM (SELECT * FROM place ORDER BY plcode,plintime DESC) t GROUP BY t.plcode
+  </select>
+  
+  <select id="selectByDateTodayPlace" resultType="Place">
+  	SELECT * FROM place WHERE plcode = #{plcode} 
+  	AND DATE_FORMAT(plintime,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+  </select>
+  
+  <select id="selectByNearlyonehour" resultType="Place">
+  	SELECT * FROM place WHERE plcode = #{plcode} 
+  	AND plintime > DATE_SUB(NOW(),INTERVAL  1 HOUR)
+  </select>
+  
+  <delete id="deleteByPrimaryKey">
+    delete from place
+    where plid = #{plid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert">
+    insert into place (plid, plcode, plvalue, 
+      plintime)
+    values (#{plid,jdbcType=INTEGER}, #{plcode,jdbcType=VARCHAR}, #{plvalue,jdbcType=VARCHAR}, 
+      #{plintime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective">
+    insert into place
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="plid != null">
+        plid,
+      </if>
+      <if test="plcode != null">
+        plcode,
+      </if>
+      <if test="plvalue != null">
+        plvalue,
+      </if>
+      <if test="plintime != null">
+        plintime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="plid != null">
+        #{plid,jdbcType=INTEGER},
+      </if>
+      <if test="plcode != null">
+        #{plcode,jdbcType=VARCHAR},
+      </if>
+      <if test="plvalue != null">
+        #{plvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="plintime != null">
+        #{plintime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update place
+    <set>
+      <if test="plcode != null">
+        plcode = #{plcode,jdbcType=VARCHAR},
+      </if>
+      <if test="plvalue != null">
+        plvalue = #{plvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="plintime != null">
+        plintime = #{plintime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where plid = #{plid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey">
+    update place
+    set plcode = #{plcode,jdbcType=VARCHAR},
+      plvalue = #{plvalue,jdbcType=VARCHAR},
+      plintime = #{plintime,jdbcType=TIMESTAMP}
+    where plid = #{plid,jdbcType=INTEGER}
+  </update>
+</mapper>

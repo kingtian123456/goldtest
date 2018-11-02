@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.DevicesMapper">
+  <select id="selectByPrimaryKey" resultType="Devices">
+    select *
+    from devices
+    where dev_id = #{dev_id}
+  </select>
+  
+  <select id="selectByDeviceOne" resultType="Devices">
+  	select *
+    from devices
+    where dev_code = #{dev_code}
+  </select>
+  
+  <select id="selectByDingWeiSheBei" resultType="Devices">
+  	SELECT * FROM devices WHERE dev_type = '定位设备'
+  </select>
+  
+  <!-- 图表的查询功能 -->
+  <select id="selectByDeviceChart" resultType="Chat">
+  	SELECT t3.days AS days,IFNULL(f.countNumber,0) AS zsum FROM			
+		(SELECT t2.days AS days FROM		
+			(SELECT @cdate := DATE_ADD(@cdate,INTERVAL -1 DAY) days FROM 
+			(SELECT @cdate :=DATE_ADD(CURDATE(),INTERVAL +1 DAY)FROM devices
+			) t1 ORDER BY days ASC) t2 
+		<![CDATA[WHERE DATE_SUB(CURDATE(), INTERVAL 20 DAY) <= DATE(t2.days)) t3]]>
+			LEFT JOIN			
+		(SELECT DATE_FORMAT(dev_intime,'%Y-%m-%d') AS saa, COUNT(1) AS countNumber 
+			FROM devices WHERE pro_id = #{pro_id}
+		GROUP BY DATE_FORMAT(dev_intime,'%Y-%m-%d')) f ON t3.days = f.saa;
+  </select>
+  
+  <select id="selectByDeviceChatzong" resultType="Chat">
+  	<![CDATA[SELECT t1.ab AS days,SUM(t2.bd) AS zsum FROM
+  (SELECT DATE_FORMAT(dev_intime,"%Y-%m-%d")AS ab,COUNT(*) AS bc
+  FROM devices WHERE pro_id = #{pro_id}  GROUP BY DATE_FORMAT(dev_intime,"%Y-%m-%d"))t1
+  INNER JOIN (SELECT DATE_FORMAT(dev_intime,"%Y-%m-%d")AS ac,COUNT(*) AS bd
+  FROM devices WHERE pro_id = #{pro_id} GROUP BY DATE_FORMAT(dev_intime,"%Y-%m-%d"))t2 
+  WHERE t2.ac <= t1.ab 
+   GROUP BY  t1.ab
+  ORDER BY  t1.ab]]>
+  </select>
+  
+  <select id="selectByDevicesDateChatZong" resultType="Chat">
+  	<![CDATA[SELECT t1.ab AS days,SUM(t2.bd) AS zsum FROM
+  	(SELECT DATE_FORMAT(dev_intime,"%Y-%m-%d")AS ab,COUNT(*) AS bc
+  	FROM devices WHERE pro_id = #{pro_id}  AND dev_intime BETWEEN #{begin} AND #{end}
+ 	 GROUP BY DATE_FORMAT(dev_intime,"%Y-%m-%d"))t1
+  	INNER JOIN (SELECT DATE_FORMAT(dev_intime,"%Y-%m-%d")AS ac,COUNT(*) AS bd
+ 	 FROM devices WHERE pro_id = #{pro_id} AND dev_intime BETWEEN #{begin} AND #{end}
+   	GROUP BY DATE_FORMAT(dev_intime,"%Y-%m-%d"))t2 
+  	WHERE t2.ac <= t1.ab 
+  	 GROUP BY  t1.ab
+  	ORDER BY  t1.ab]]>
+  </select>
+  
+  <select id="selectByDeviceDate" resultType="Chat">
+  	SELECT DATE_FORMAT(dev_intime,'%Y-%m-%d') AS days, COUNT(1) AS zsum 
+	FROM devices 
+		WHERE pro_id = #{pro_id} AND dev_intime BETWEEN #{begin} AND #{end}
+		GROUP BY DATE_FORMAT(dev_intime,'%Y-%m-%d')
+  </select>
+  
+  <select id="selectByDeviceOnline" resultType="int">
+  	SELECT COUNT(1) FROM devices WHERE pro_id = #{pro_id} AND dev_ispassca = 1
+  </select>
+  
+  <select id="selectByDeviceMSI" resultType="Devices">
+  	select * from devices where 1 = 1
+  	<if test="dev_vnum != null and dev_vnum != ''">
+  		and dev_vnum = #{dev_vnum}
+  	</if> 
+  	<if test="at_id != null and at_id != ''">
+  		and at_id = #{at_id}
+  	</if>
+  </select>
+  
+  <select id="selectByProductDev" resultType="Devices">
+  	SELECT * FROM devices WHERE 1 =1
+  	<if test="user_code != null and user_code != '' ">
+  		AND user_code = #{user_code}
+  	</if>
+  	<if test="pro_id != null and pro_id !='' ">
+  		AND pro_id = #{pro_id}
+  	</if>
+  	<if test="logTxt != null and logTxt != '' ">
+       AND (dev_code LIKE CONCAT('%',#{logTxt},'%') OR dev_name LIKE CONCAT('%',#{logTxt},'%'))
+    </if>
+  	<if test="before != null and after != null">
+  		LIMIT #{before},#{after}
+  	</if>
+  </select>
+  
+  <select id="selectByProductDevCount" resultType="int">
+  	SELECT COUNT(1) FROM devices WHERE 1 =1
+  	<if test="user_code != null">
+  		AND user_code = #{user_code}
+  	</if>
+  	<if test="pro_id != null">
+  		AND pro_id = #{pro_id}
+  	</if>
+  	<if test="logTxt != null">
+       AND dev_code LIKE CONCAT('%',#{logTxt},'%') OR dev_name LIKE CONCAT('%',#{logTxt},'%')
+    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey">
+    delete from devices
+    where dev_id = #{dev_id}
+  </delete>
+  
+  <delete id="deleteByPrimaryKeyOneDevice">
+  	delete from devices
+    where pro_id = #{pro_id}
+  </delete>
+  
+  <insert id="insert">
+    insert into devices (dev_id, "at _id", user_code, 
+      pro_id, dvg_id, dev_code, 
+      dev_vnum, dev_name, dev_type, 
+      dev_profile, dev_islife, dev_ispassca, 
+      dev_sumnum, dev_uptime, dev_intime, 
+      dev_edtime)
+    values (#{devId,jdbcType=INTEGER}, #{atId,jdbcType=INTEGER}, #{userCode,jdbcType=VARCHAR}, 
+      #{proId,jdbcType=INTEGER}, #{dvgId,jdbcType=INTEGER}, #{devCode,jdbcType=VARCHAR}, 
+      #{devVnum,jdbcType=VARCHAR}, #{devName,jdbcType=VARCHAR}, #{devType,jdbcType=VARCHAR}, 
+      #{devProfile,jdbcType=VARCHAR}, #{devIslife,jdbcType=INTEGER}, #{devIspassca,jdbcType=INTEGER}, 
+      #{devSumnum,jdbcType=INTEGER}, #{devUptime,jdbcType=TIMESTAMP}, #{devIntime,jdbcType=TIMESTAMP}, 
+      #{devEdtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective">
+    insert into devices
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dev_id != null">
+        dev_id,
+      </if>
+      <if test="at_id != null">
+        at_id,
+      </if>
+      <if test="user_code != null">
+        user_code,
+      </if>
+      <if test="pro_id != null">
+        pro_id,
+      </if>
+      <if test="dvg_id != null">
+        dvg_id,
+      </if>
+      <if test="dev_code != null">
+        dev_code,
+      </if>
+      <if test="dev_vnum != null">
+        dev_vnum,
+      </if>
+      <if test="dev_name != null">
+        dev_name,
+      </if>
+      <if test="dev_type != null">
+        dev_type,
+      </if>
+      <if test="dev_profile != null">
+        dev_profile,
+      </if>
+      <if test="dev_islife != null">
+        dev_islife,
+      </if>
+      <if test="dev_ispassca != null">
+        dev_ispassca,
+      </if>
+      <if test="dev_sumnum != null">
+        dev_sumnum,
+      </if>
+      <if test="dev_forward != null">
+        dev_forward,
+      </if>
+      <if test="dev_forport != null">
+        dev_forport,
+      </if>
+      <if test="dev_uptime != null">
+        dev_uptime,
+      </if>
+      <if test="dev_intime != null">
+        dev_intime,
+      </if>
+      <if test="dev_edtime != null">
+        dev_edtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dev_id != null">
+        #{dev_id},
+      </if>
+      <if test="at_id != null">
+        #{at_id},
+      </if>
+      <if test="user_code != null">
+        #{user_code},
+      </if>
+      <if test="pro_id != null">
+        #{pro_id},
+      </if>
+      <if test="dvg_id != null">
+        #{dvg_id},
+      </if>
+      <if test="dev_code != null">
+        #{dev_code},
+      </if>
+      <if test="dev_vnum != null">
+        #{dev_vnum},
+      </if>
+      <if test="dev_name != null">
+        #{dev_name},
+      </if>
+      <if test="dev_type != null">
+        #{dev_type},
+      </if>
+      <if test="dev_profile != null">
+        #{dev_profile},
+      </if>
+      <if test="dev_islife != null">
+        #{dev_islife},
+      </if>
+      <if test="dev_ispassca != null">
+        #{dev_ispassca},
+      </if>
+      <if test="dev_sumnum != null">
+        #{dev_sumnum},
+      </if>
+      <if test="dev_forward != null">
+        #{dev_forward},
+      </if>
+      <if test="dev_forport != null">
+        #{dev_forport},
+      </if>
+      <if test="dev_uptime != null">
+        #{dev_uptime},
+      </if>
+      <if test="dev_intime != null">
+        #{dev_intime},
+      </if>
+      <if test="dev_edtime != null">
+        #{dev_edtime},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update devices
+    <set>
+      <if test="at_id != null">
+        at_id = #{at_id},
+      </if>
+      <if test="user_code != null">
+        user_code = #{user_code},
+      </if>
+      <if test="pro_id != null">
+        pro_id = #{pro_id},
+      </if>
+      <if test="dvg_id != null">
+        dvg_id = #{dvg_id},
+      </if>
+      <if test="dev_vnum != null">
+        dev_vnum = #{dev_vnum},
+      </if>
+      <if test="dev_name != null">
+        dev_name = #{dev_name},
+      </if>
+      <if test="dev_type != null">
+        dev_type = #{dev_type},
+      </if>
+      <if test="dev_profile != null">
+        dev_profile = #{dev_profile},
+      </if>
+      <if test="dev_islife != null">
+        dev_islife = #{dev_islife},
+      </if>
+      <if test="dev_ispassca != null">
+        dev_ispassca = #{dev_ispassca},
+      </if>
+      <if test="dev_sumnum != null">
+        dev_sumnum = #{dev_sumnum},
+      </if>
+      <if test="dev_forward != null">
+        dev_forward = #{dev_forward},
+      </if>
+      <if test="dev_forport != null">
+        dev_forport = #{dev_forport},
+      </if>
+      <if test="dev_uptime != null">
+        dev_uptime = #{dev_uptime},
+      </if>
+      <if test="dev_uptime != null">
+        dev_uptime = #{dev_uptime},
+      </if>
+      <if test="dev_edtime != null">
+        dev_edtime = #{dev_edtime},
+      </if>
+    </set>
+    where dev_code = #{dev_code}
+  </update>
+  <update id="updateByPrimaryKey">
+    update devices
+    set at_id = #{atId,jdbcType=INTEGER},
+      user_code = #{userCode,jdbcType=VARCHAR},
+      pro_id = #{proId,jdbcType=INTEGER},
+      dvg_id = #{dvgId,jdbcType=INTEGER},
+      dev_code = #{devCode,jdbcType=VARCHAR},
+      dev_vnum = #{devVnum,jdbcType=VARCHAR},
+      dev_name = #{devName,jdbcType=VARCHAR},
+      dev_type = #{devType,jdbcType=VARCHAR},
+      dev_profile = #{devProfile,jdbcType=VARCHAR},
+      dev_islife = #{devIslife,jdbcType=INTEGER},
+      dev_ispassca = #{devIspassca,jdbcType=INTEGER},
+      dev_sumnum = #{devSumnum,jdbcType=INTEGER},
+      dev_uptime = #{devUptime,jdbcType=TIMESTAMP},
+      dev_intime = #{devIntime,jdbcType=TIMESTAMP},
+      dev_edtime = #{devEdtime,jdbcType=TIMESTAMP}
+    where dev_id = #{devId,jdbcType=INTEGER}
+  </update>
+</mapper>

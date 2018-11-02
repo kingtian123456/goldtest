@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.UserMapper">
+
+  <select id="selectByPrimaryKey" resultType="User">
+    select * from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="MessagebackUser" resultType="User">
+  	SELECT * FROM user WHERE user_mobile = #{moble}
+  </select>
+  
+  <select id="selectByPrimaryOne" resultType="User">
+ 	 select * from user
+    	where 1 = 1
+    <if test="userAccount != null">
+    	and user_account = #{userAccount}
+    </if>
+    <if test="user_mobile != null">
+    	and user_mobile = #{user_mobile}
+    </if>
+    <if test="user_mail != null">
+    	and user_mail = #{user_mail}
+    </if>
+    <if test="userPassword != null">
+    	and user_password = #{userPassword}
+    </if>	
+  </select>
+  
+  <delete id="deleteByPrimaryKey">
+    delete from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert">
+    insert into user (user_id, user_code, user_account, 
+      user_password, user_name, user_age, 
+      user_sex, user_mobile, user_mail, 
+      user_intime, user_logintime, user_loginnum, 
+      user_IP, user_uptime)
+    values (#{userId,jdbcType=INTEGER}, #{userCode,jdbcType=VARCHAR}, #{userAccount,jdbcType=VARCHAR}, 
+      #{userPassword,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userAge,jdbcType=INTEGER}, 
+      #{userSex,jdbcType=INTEGER}, #{userMobile,jdbcType=VARCHAR}, #{userMail,jdbcType=VARCHAR}, 
+      #{userIntime,jdbcType=TIMESTAMP}, #{userLogintime,jdbcType=TIMESTAMP}, #{userLoginnum,jdbcType=INTEGER}, 
+      #{userIp,jdbcType=VARCHAR}, #{userUptime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="user_id != null">
+        user_id,
+      </if>
+      <if test="user_code != null">
+        user_code,
+      </if>
+      <if test="user_account != null">
+        user_account,
+      </if>
+      <if test="user_password != null">
+        user_password,
+      </if>
+      <if test="user_name != null">
+        user_name,
+      </if>
+      <if test="user_age != null">
+        user_age,
+      </if>
+      <if test="user_sex != null">
+        user_sex,
+      </if>
+      <if test="user_mobile != null">
+        user_mobile,
+      </if>
+      <if test="user_mail != null">
+        user_mail,
+      </if>
+      <if test="user_intime != null">
+        user_intime,
+      </if>
+      <if test="user_logintime != null">
+        user_logintime,
+      </if>
+      <if test="user_loginnum != null">
+        user_loginnum,
+      </if>
+      <if test="user_authority != null">
+      	user_authority,
+      </if>
+      <if test="user_auth != null">
+      	user_auth,
+      </if>
+      <if test="user_IP != null">
+        user_IP,
+      </if>
+      <if test="user_uptime != null">
+        user_uptime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="user_id != null">
+        #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="user_code != null">
+        #{user_code,jdbcType=VARCHAR},
+      </if>
+      <if test="user_account != null">
+        #{user_account,jdbcType=VARCHAR},
+      </if>
+      <if test="user_password != null">
+        #{user_password,jdbcType=VARCHAR},
+      </if>
+      <if test="user_name != null">
+        #{user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="user_age != null">
+        #{user_age,jdbcType=INTEGER},
+      </if>
+      <if test="user_sex != null">
+        #{user_sex,jdbcType=INTEGER},
+      </if>
+      <if test="user_mobile != null">
+        #{user_mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="user_mail != null">
+        #{user_mail,jdbcType=VARCHAR},
+      </if>
+      <if test="user_intime != null">
+        #{user_intime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="user_logintime != null">
+        #{user_logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="user_loginnum != null">
+        #{user_loginnum,jdbcType=INTEGER},
+      </if>
+      <if test="user_authority != null">
+      	#{user_authority,jdbcType=INTEGER},
+      </if>
+      <if test="user_auth != null">
+      	#{user_auth,jdbcType=INTEGER},
+      </if>
+      <if test="user_IP != null">
+        #{user_IP,jdbcType=VARCHAR},
+      </if>
+      <if test="user_uptime != null">
+        #{user_uptime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective">
+    update user
+    <set>
+      <if test="user_code != null">
+        user_code = #{user_code,jdbcType=VARCHAR},
+      </if>
+      <if test="user_account != null">
+        user_account = #{user_account,jdbcType=VARCHAR},
+      </if>
+      <if test="user_password != null">
+        user_password = #{user_password,jdbcType=VARCHAR},
+      </if>
+      <if test="user_name != null">
+        user_name = #{user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="user_age != null">
+        user_age = #{user_age,jdbcType=INTEGER},
+      </if>
+      <if test="user_sex != null">
+        user_sex = #{user_sex,jdbcType=INTEGER},
+      </if>
+      <if test="user_mobile != null">
+        user_mobile = #{user_mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="user_mail != null">
+        user_mail = #{user_mail,jdbcType=VARCHAR},
+      </if>
+      <if test="user_intime != null">
+        user_intime = #{user_intime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="user_logintime != null">
+        user_logintime = #{user_logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="user_loginnum != null">
+        user_loginnum = #{user_loginnum,jdbcType=INTEGER},
+      </if>
+      <if test="user_authority != null">
+      	user_authority = #{user_authority,jdbcType=INTEGER},
+      </if>
+      <if test="user_auth != null">
+      	user_auth = #{user_auth,jdbcType=INTEGER},
+      </if>
+      <if test="user_IP != null">
+        user_IP = #{user_IP,jdbcType=VARCHAR},
+      </if>
+      <if test="user_uptime != null">
+        user_uptime = #{user_uptime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey">
+    update user
+    set user_code = #{userCode,jdbcType=VARCHAR},
+      user_account = #{userAccount,jdbcType=VARCHAR},
+      user_password = #{userPassword,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_age = #{userAge,jdbcType=INTEGER},
+      user_sex = #{userSex,jdbcType=INTEGER},
+      user_mobile = #{userMobile,jdbcType=VARCHAR},
+      user_mail = #{userMail,jdbcType=VARCHAR},
+      user_intime = #{userIntime,jdbcType=TIMESTAMP},
+      user_logintime = #{userLogintime,jdbcType=TIMESTAMP},
+      user_loginnum = #{userLoginnum,jdbcType=INTEGER},
+      user_IP = #{userIp,jdbcType=VARCHAR},
+      user_uptime = #{userUptime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

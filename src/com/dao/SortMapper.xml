@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.SortMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Sort">
+    <id column="sort_id" jdbcType="INTEGER" property="sortId" />
+    <result column="sort_depth" jdbcType="INTEGER" property="sortDepth" />
+    <result column="sort_type" jdbcType="INTEGER" property="sortType" />
+    <result column="sort_parentid" jdbcType="INTEGER" property="sortParentid" />
+    <result column="sort_name" jdbcType="VARCHAR" property="sortName" />
+    <result column="sort_stats" jdbcType="INTEGER" property="sortStats" />
+    <result column="sort_seachkey" jdbcType="VARCHAR" property="sortSeachkey" />
+    <result column="sort_orders" jdbcType="INTEGER" property="sortOrders" />
+    <result column="sort_remark" jdbcType="VARCHAR" property="sortRemark" />
+    <result column="sort_dir" jdbcType="VARCHAR" property="sortDir" />
+    <result column="sort_linkurl" jdbcType="VARCHAR" property="sortLinkurl" />
+    <result column="sort_content" jdbcType="VARCHAR" property="sortContent" />
+    <result column="sort_isshow" jdbcType="INTEGER" property="sortIsshow" />
+    <result column="sort_uptime" jdbcType="TIMESTAMP" property="sortUptime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sort_id, sort_depth, sort_type, sort_parentid, sort_name, sort_stats, sort_seachkey, 
+    sort_orders, sort_remark, sort_dir, sort_linkurl, sort_content, sort_isshow, sort_uptime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"/>
+    from sort
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectBySortSubclass" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM sort WHERE sort_id != sort_parentid and sort_parentid = #{parentId}
+  </select>
+  
+  <select id="selectBySortZiInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT * FROM sort WHERE sort_id != sort_parentid LIMIT #{startIndex},#{pageSize}
+  </select>
+  
+  <select id="selectBySortZiCount" resultType="java.lang.Integer">
+  	SELECT COUNT(1) FROM sort WHERE sort_id != sort_parentid
+  </select>
+  
+  <select id="selectBySortFuInfo" resultMap="BaseResultMap">
+  	SELECT * FROM sort WHERE sort_id = sort_parentid
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sort
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Sort">
+    insert into sort (sort_id, sort_depth, sort_type, 
+      sort_parentid, sort_name, sort_stats, 
+      sort_seachkey, sort_orders, sort_remark, 
+      sort_dir, sort_linkurl, sort_content, 
+      sort_isshow, sort_uptime)
+    values (#{sortId,jdbcType=INTEGER}, #{sortDepth,jdbcType=INTEGER}, #{sortType,jdbcType=INTEGER}, 
+      #{sortParentid,jdbcType=INTEGER}, #{sortName,jdbcType=VARCHAR}, #{sortStats,jdbcType=INTEGER}, 
+      #{sortSeachkey,jdbcType=VARCHAR}, #{sortOrders,jdbcType=INTEGER}, #{sortRemark,jdbcType=VARCHAR}, 
+      #{sortDir,jdbcType=VARCHAR}, #{sortLinkurl,jdbcType=VARCHAR}, #{sortContent,jdbcType=VARCHAR}, 
+      #{sortIsshow,jdbcType=INTEGER}, #{sortUptime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Sort">
+    insert into sort
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sortId != null">
+        sort_id,
+      </if>
+      <if test="sortDepth != null">
+        sort_depth,
+      </if>
+      <if test="sortType != null">
+        sort_type,
+      </if>
+      <if test="sortParentid != null">
+        sort_parentid,
+      </if>
+      <if test="sortName != null">
+        sort_name,
+      </if>
+      <if test="sortStats != null">
+        sort_stats,
+      </if>
+      <if test="sortSeachkey != null">
+        sort_seachkey,
+      </if>
+      <if test="sortOrders != null">
+        sort_orders,
+      </if>
+      <if test="sortRemark != null">
+        sort_remark,
+      </if>
+      <if test="sortDir != null">
+        sort_dir,
+      </if>
+      <if test="sortLinkurl != null">
+        sort_linkurl,
+      </if>
+      <if test="sortContent != null">
+        sort_content,
+      </if>
+      <if test="sortIsshow != null">
+        sort_isshow,
+      </if>
+      <if test="sortUptime != null">
+        sort_uptime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sortId != null">
+        #{sortId,jdbcType=INTEGER},
+      </if>
+      <if test="sortDepth != null">
+        #{sortDepth,jdbcType=INTEGER},
+      </if>
+      <if test="sortType != null">
+        #{sortType,jdbcType=INTEGER},
+      </if>
+      <if test="sortParentid != null">
+        #{sortParentid,jdbcType=INTEGER},
+      </if>
+      <if test="sortName != null">
+        #{sortName,jdbcType=VARCHAR},
+      </if>
+      <if test="sortStats != null">
+        #{sortStats,jdbcType=INTEGER},
+      </if>
+      <if test="sortSeachkey != null">
+        #{sortSeachkey,jdbcType=VARCHAR},
+      </if>
+      <if test="sortOrders != null">
+        #{sortOrders,jdbcType=INTEGER},
+      </if>
+      <if test="sortRemark != null">
+        #{sortRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="sortDir != null">
+        #{sortDir,jdbcType=VARCHAR},
+      </if>
+      <if test="sortLinkurl != null">
+        #{sortLinkurl,jdbcType=VARCHAR},
+      </if>
+      <if test="sortContent != null">
+        #{sortContent,jdbcType=VARCHAR},
+      </if>
+      <if test="sortIsshow != null">
+        #{sortIsshow,jdbcType=INTEGER},
+      </if>
+      <if test="sortUptime != null">
+        #{sortUptime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Sort">
+    update sort
+    <set>
+      <if test="sortDepth != null">
+        sort_depth = #{sortDepth,jdbcType=INTEGER},
+      </if>
+      <if test="sortType != null">
+        sort_type = #{sortType,jdbcType=INTEGER},
+      </if>
+      <if test="sortParentid != null">
+        sort_parentid = #{sortParentid,jdbcType=INTEGER},
+      </if>
+      <if test="sortName != null">
+        sort_name = #{sortName,jdbcType=VARCHAR},
+      </if>
+      <if test="sortStats != null">
+        sort_stats = #{sortStats,jdbcType=INTEGER},
+      </if>
+      <if test="sortSeachkey != null">
+        sort_seachkey = #{sortSeachkey,jdbcType=VARCHAR},
+      </if>
+      <if test="sortOrders != null">
+        sort_orders = #{sortOrders,jdbcType=INTEGER},
+      </if>
+      <if test="sortRemark != null">
+        sort_remark = #{sortRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="sortDir != null">
+        sort_dir = #{sortDir,jdbcType=VARCHAR},
+      </if>
+      <if test="sortLinkurl != null">
+        sort_linkurl = #{sortLinkurl,jdbcType=VARCHAR},
+      </if>
+      <if test="sortContent != null">
+        sort_content = #{sortContent,jdbcType=VARCHAR},
+      </if>
+      <if test="sortIsshow != null">
+        sort_isshow = #{sortIsshow,jdbcType=INTEGER},
+      </if>
+      <if test="sortUptime != null">
+        sort_uptime = #{sortUptime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Sort">
+    update sort
+    set sort_depth = #{sortDepth,jdbcType=INTEGER},
+      sort_type = #{sortType,jdbcType=INTEGER},
+      sort_parentid = #{sortParentid,jdbcType=INTEGER},
+      sort_name = #{sortName,jdbcType=VARCHAR},
+      sort_stats = #{sortStats,jdbcType=INTEGER},
+      sort_seachkey = #{sortSeachkey,jdbcType=VARCHAR},
+      sort_orders = #{sortOrders,jdbcType=INTEGER},
+      sort_remark = #{sortRemark,jdbcType=VARCHAR},
+      sort_dir = #{sortDir,jdbcType=VARCHAR},
+      sort_linkurl = #{sortLinkurl,jdbcType=VARCHAR},
+      sort_content = #{sortContent,jdbcType=VARCHAR},
+      sort_isshow = #{sortIsshow,jdbcType=INTEGER},
+      sort_uptime = #{sortUptime,jdbcType=TIMESTAMP}
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </update>
+</mapper>

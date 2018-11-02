@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.LabsMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Labs">
+    <id column="labs_id" jdbcType="INTEGER" property="labsId" />
+    <result column="labs_number" jdbcType="VARCHAR" property="labsNumber" />
+    <result column="labs_user" jdbcType="VARCHAR" property="labsUser" />
+    <result column="labs_validation" jdbcType="INTEGER" property="labsValidation" />
+    <result column="labs_send" jdbcType="INTEGER" property="labsSend" />
+    <result column="labs_acttime" jdbcType="TIMESTAMP" property="labsActtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    labs_id, labs_number, labs_user, labs_validation, labs_send, labs_acttime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from labs
+    where labs_id = #{labsId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPrimaryNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select * from labs where labs_number = #{Number}
+  </select>
+  
+  <select id="selectByPageLabs" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT * FROM labs LIMIT #{startIndex},#{pageSize}
+  </select>
+  
+  <select id="selectByLabsCount" resultType="java.lang.Integer">
+  	SELECT COUNT(1) FROM labs
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from labs
+    where labs_id = #{labsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Labs">
+    insert into labs (labs_id, labs_number, labs_user, 
+      labs_validation, labs_send, labs_acttime
+      )
+    values (#{labsId,jdbcType=INTEGER}, #{labsNumber,jdbcType=VARCHAR}, #{labsUser,jdbcType=VARCHAR}, 
+      #{labsValidation,jdbcType=INTEGER}, #{labsSend,jdbcType=INTEGER}, #{labsActtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Labs">
+    insert into labs
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="labsId != null">
+        labs_id,
+      </if>
+      <if test="labsNumber != null">
+        labs_number,
+      </if>
+      <if test="labsUser != null">
+        labs_user,
+      </if>
+      <if test="labsValidation != null">
+        labs_validation,
+      </if>
+      <if test="labsSend != null">
+        labs_send,
+      </if>
+      <if test="labsActtime != null">
+        labs_acttime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="labsId != null">
+        #{labsId,jdbcType=INTEGER},
+      </if>
+      <if test="labsNumber != null">
+        #{labsNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="labsUser != null">
+        #{labsUser,jdbcType=VARCHAR},
+      </if>
+      <if test="labsValidation != null">
+        #{labsValidation,jdbcType=INTEGER},
+      </if>
+      <if test="labsSend != null">
+        #{labsSend,jdbcType=INTEGER},
+      </if>
+      <if test="labsActtime != null">
+        #{labsActtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Labs">
+    update labs
+    <set>
+      <if test="labsNumber != null">
+        labs_number = #{labsNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="labsUser != null">
+        labs_user = #{labsUser,jdbcType=VARCHAR},
+      </if>
+      <if test="labsValidation != null">
+        labs_validation = #{labsValidation,jdbcType=INTEGER},
+      </if>
+      <if test="labsSend != null">
+        labs_send = #{labsSend,jdbcType=INTEGER},
+      </if>
+      <if test="labsActtime != null">
+        labs_acttime = #{labsActtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where labs_id = #{labsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Labs">
+    update labs
+    set labs_number = #{labsNumber,jdbcType=VARCHAR},
+      labs_user = #{labsUser,jdbcType=VARCHAR},
+      labs_validation = #{labsValidation,jdbcType=INTEGER},
+      labs_send = #{labsSend,jdbcType=INTEGER},
+      labs_acttime = #{labsActtime,jdbcType=TIMESTAMP}
+    where labs_id = #{labsId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.NewsMapper">
+  <resultMap id="BaseResultMap" type="com.entity.News">
+    <id column="news_id" jdbcType="INTEGER" property="newsId" />
+    <result column="sort_id" jdbcType="INTEGER" property="sortId" />
+    <result column="news_title" jdbcType="VARCHAR" property="newsTitle" />
+    <result column="news_intro" jdbcType="VARCHAR" property="newsIntro" />
+    <result column="news_author" jdbcType="VARCHAR" property="newsAuthor" />
+    <result column="news_copyfrom" jdbcType="VARCHAR" property="newsCopyfrom" />
+    <result column="news_keyword" jdbcType="VARCHAR" property="newsKeyword" />
+    <result column="news_defaultpicurl" jdbcType="VARCHAR" property="newsDefaultpicurl" />
+    <result column="news_user" jdbcType="VARCHAR" property="newsUser" />
+    <result column="news_orders" jdbcType="INTEGER" property="newsOrders" />
+    <result column="news_hits" jdbcType="INTEGER" property="newsHits" />
+    <result column="news_deleted" jdbcType="INTEGER" property="newsDeleted" />
+    <result column="news_passed" jdbcType="INTEGER" property="newsPassed" />
+    <result column="news_ontop" jdbcType="INTEGER" property="newsOntop" />
+    <result column="news_createtime" jdbcType="TIMESTAMP" property="newsCreatetime" />
+    <result column="news_updatetime" jdbcType="TIMESTAMP" property="newsUpdatetime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.entity.News">
+    <result column="news_content" jdbcType="LONGVARCHAR" property="newsContent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    news_id, sort_id, news_title, news_intro, news_author, news_copyfrom, news_keyword, 
+    news_defaultpicurl, news_user, news_orders, news_hits, news_deleted, news_passed, 
+    news_ontop, news_createtime, news_updatetime
+  </sql>
+  <sql id="Blob_Column_List">
+    news_content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByNewsKey" resultType="java.lang.String">
+  	SELECT news_keyword FROM news
+  </select>
+  
+  <select id="selectByNewsID" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+  	SELECT * FROM news WHERE news_title = #{title}
+  </select>
+  
+  <select id="selectByNewsArticle" resultMap="ResultMapWithBLOBs">
+  	SELECT * FROM news ORDER BY news_hits DESC LIMIT 0,8
+  </select>
+  
+  <select id="selectByblogCount" resultType="int" parameterType="java.lang.Integer">
+  	SELECT COUNT(1) FROM news n LEFT JOIN sort s ON n.sort_id = s.sort_id WHERE s.sort_parentid = #{category}
+  </select>
+  
+  <select id="selectBySortIdNews" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  	SELECT * FROM news WHERE sort_id = #{sortId}
+  </select>
+  
+  <select id="selectByblogpaging" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map">
+  	SELECT * FROM news n LEFT JOIN sort s ON n.sort_id = s.sort_id WHERE s.sort_parentid = #{category} LIMIT #{before},#{after}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </delete>
+  
+  <delete id="deleteByNewsSort" parameterType="java.lang.Integer">
+  	delete from news
+    where sort_id = #{sortId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.entity.News">
+    insert into news (news_id, sort_id, news_title, 
+      news_intro, news_author, news_copyfrom, 
+      news_keyword, news_defaultpicurl, news_user, 
+      news_orders, news_hits, news_deleted, 
+      news_passed, news_ontop, news_createtime, 
+      news_updatetime, news_content)
+    values (#{newsId,jdbcType=INTEGER}, #{sortId,jdbcType=INTEGER}, #{newsTitle,jdbcType=VARCHAR}, 
+      #{newsIntro,jdbcType=VARCHAR}, #{newsAuthor,jdbcType=VARCHAR}, #{newsCopyfrom,jdbcType=VARCHAR}, 
+      #{newsKeyword,jdbcType=VARCHAR}, #{newsDefaultpicurl,jdbcType=VARCHAR}, #{newsUser,jdbcType=VARCHAR}, 
+      #{newsOrders,jdbcType=INTEGER}, #{newsHits,jdbcType=INTEGER}, #{newsDeleted,jdbcType=INTEGER}, 
+      #{newsPassed,jdbcType=INTEGER}, #{newsOntop,jdbcType=INTEGER}, #{newsCreatetime,jdbcType=TIMESTAMP}, 
+      #{newsUpdatetime,jdbcType=TIMESTAMP}, #{newsContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.News">
+    insert into news
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="newsId != null">
+        news_id,
+      </if>
+      <if test="sortId != null">
+        sort_id,
+      </if>
+      <if test="newsTitle != null">
+        news_title,
+      </if>
+      <if test="newsIntro != null">
+        news_intro,
+      </if>
+      <if test="newsAuthor != null">
+        news_author,
+      </if>
+      <if test="newsCopyfrom != null">
+        news_copyfrom,
+      </if>
+      <if test="newsKeyword != null">
+        news_keyword,
+      </if>
+      <if test="newsDefaultpicurl != null">
+        news_defaultpicurl,
+      </if>
+      <if test="newsUser != null">
+        news_user,
+      </if>
+      <if test="newsOrders != null">
+        news_orders,
+      </if>
+      <if test="newsHits != null">
+        news_hits,
+      </if>
+      <if test="newsDeleted != null">
+        news_deleted,
+      </if>
+      <if test="newsPassed != null">
+        news_passed,
+      </if>
+      <if test="newsOntop != null">
+        news_ontop,
+      </if>
+      <if test="newsCreatetime != null">
+        news_createtime,
+      </if>
+      <if test="newsUpdatetime != null">
+        news_updatetime,
+      </if>
+      <if test="newsContent != null">
+        news_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="newsId != null">
+        #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="sortId != null">
+        #{sortId,jdbcType=INTEGER},
+      </if>
+      <if test="newsTitle != null">
+        #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsIntro != null">
+        #{newsIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="newsAuthor != null">
+        #{newsAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="newsCopyfrom != null">
+        #{newsCopyfrom,jdbcType=VARCHAR},
+      </if>
+      <if test="newsKeyword != null">
+        #{newsKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="newsDefaultpicurl != null">
+        #{newsDefaultpicurl,jdbcType=VARCHAR},
+      </if>
+      <if test="newsUser != null">
+        #{newsUser,jdbcType=VARCHAR},
+      </if>
+      <if test="newsOrders != null">
+        #{newsOrders,jdbcType=INTEGER},
+      </if>
+      <if test="newsHits != null">
+        #{newsHits,jdbcType=INTEGER},
+      </if>
+      <if test="newsDeleted != null">
+        #{newsDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="newsPassed != null">
+        #{newsPassed,jdbcType=INTEGER},
+      </if>
+      <if test="newsOntop != null">
+        #{newsOntop,jdbcType=INTEGER},
+      </if>
+      <if test="newsCreatetime != null">
+        #{newsCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsUpdatetime != null">
+        #{newsUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsContent != null">
+        #{newsContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.News">
+    update news
+    <set>
+      <if test="sortId != null">
+        sort_id = #{sortId,jdbcType=INTEGER},
+      </if>
+      <if test="newsTitle != null">
+        news_title = #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsIntro != null">
+        news_intro = #{newsIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="newsAuthor != null">
+        news_author = #{newsAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="newsCopyfrom != null">
+        news_copyfrom = #{newsCopyfrom,jdbcType=VARCHAR},
+      </if>
+      <if test="newsKeyword != null">
+        news_keyword = #{newsKeyword,jdbcType=VARCHAR},
+      </if>
+      <if test="newsDefaultpicurl != null">
+        news_defaultpicurl = #{newsDefaultpicurl,jdbcType=VARCHAR},
+      </if>
+      <if test="newsUser != null">
+        news_user = #{newsUser,jdbcType=VARCHAR},
+      </if>
+      <if test="newsOrders != null">
+        news_orders = #{newsOrders,jdbcType=INTEGER},
+      </if>
+      <if test="newsHits != null">
+        news_hits = #{newsHits,jdbcType=INTEGER},
+      </if>
+      <if test="newsDeleted != null">
+        news_deleted = #{newsDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="newsPassed != null">
+        news_passed = #{newsPassed,jdbcType=INTEGER},
+      </if>
+      <if test="newsOntop != null">
+        news_ontop = #{newsOntop,jdbcType=INTEGER},
+      </if>
+      <if test="newsCreatetime != null">
+        news_createtime = #{newsCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsUpdatetime != null">
+        news_updatetime = #{newsUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsContent != null">
+        news_content = #{newsContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.entity.News">
+    update news
+    set sort_id = #{sortId,jdbcType=INTEGER},
+      news_title = #{newsTitle,jdbcType=VARCHAR},
+      news_intro = #{newsIntro,jdbcType=VARCHAR},
+      news_author = #{newsAuthor,jdbcType=VARCHAR},
+      news_copyfrom = #{newsCopyfrom,jdbcType=VARCHAR},
+      news_keyword = #{newsKeyword,jdbcType=VARCHAR},
+      news_defaultpicurl = #{newsDefaultpicurl,jdbcType=VARCHAR},
+      news_user = #{newsUser,jdbcType=VARCHAR},
+      news_orders = #{newsOrders,jdbcType=INTEGER},
+      news_hits = #{newsHits,jdbcType=INTEGER},
+      news_deleted = #{newsDeleted,jdbcType=INTEGER},
+      news_passed = #{newsPassed,jdbcType=INTEGER},
+      news_ontop = #{newsOntop,jdbcType=INTEGER},
+      news_createtime = #{newsCreatetime,jdbcType=TIMESTAMP},
+      news_updatetime = #{newsUpdatetime,jdbcType=TIMESTAMP},
+      news_content = #{newsContent,jdbcType=LONGVARCHAR}
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.News">
+    update news
+    set sort_id = #{sortId,jdbcType=INTEGER},
+      news_title = #{newsTitle,jdbcType=VARCHAR},
+      news_intro = #{newsIntro,jdbcType=VARCHAR},
+      news_author = #{newsAuthor,jdbcType=VARCHAR},
+      news_copyfrom = #{newsCopyfrom,jdbcType=VARCHAR},
+      news_keyword = #{newsKeyword,jdbcType=VARCHAR},
+      news_defaultpicurl = #{newsDefaultpicurl,jdbcType=VARCHAR},
+      news_user = #{newsUser,jdbcType=VARCHAR},
+      news_orders = #{newsOrders,jdbcType=INTEGER},
+      news_hits = #{newsHits,jdbcType=INTEGER},
+      news_deleted = #{newsDeleted,jdbcType=INTEGER},
+      news_passed = #{newsPassed,jdbcType=INTEGER},
+      news_ontop = #{newsOntop,jdbcType=INTEGER},
+      news_createtime = #{newsCreatetime,jdbcType=TIMESTAMP},
+      news_updatetime = #{newsUpdatetime,jdbcType=TIMESTAMP}
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+</mapper>

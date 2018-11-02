@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.DownloadMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Download">
+    <id column="do_id" jdbcType="INTEGER" property="doId" />
+    <result column="do_name" jdbcType="VARCHAR" property="doName" />
+    <result column="do_title" jdbcType="VARCHAR" property="doTitle" />
+    <result column="do_code" jdbcType="VARCHAR" property="doCode" />
+    <result column="do_intron" jdbcType="VARCHAR" property="doIntron" />
+    <result column="do_loadurl" jdbcType="VARCHAR" property="doLoadurl" />
+    <result column="do_loadnum" jdbcType="INTEGER" property="doLoadnum" />
+    <result column="do_creatime" jdbcType="TIMESTAMP" property="doCreatime" />
+    <result column="do_uptime" jdbcType="TIMESTAMP" property="doUptime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    do_id, do_name, do_title, do_code, do_intron, do_loadurl, do_loadnum, do_creatime, 
+    do_uptime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from download
+    where do_id = #{doId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByDownloadInfo" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT * FROM download ORDER BY do_creatime DESC LIMIT #{startIndex},#{pageSize}
+  </select>
+  
+  <select id="selectDownloadCount" resultType="java.lang.Integer">
+  	SELECT COUNT(0) FROM download
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from download
+    where do_id = #{doId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Download">
+    insert into download (do_id, do_name, do_title, 
+      do_code, do_intron, do_loadurl, 
+      do_loadnum, do_creatime, do_uptime
+      )
+    values (#{doId,jdbcType=INTEGER}, #{doName,jdbcType=VARCHAR}, #{doTitle,jdbcType=VARCHAR}, 
+      #{doCode,jdbcType=VARCHAR}, #{doIntron,jdbcType=VARCHAR}, #{doLoadurl,jdbcType=VARCHAR}, 
+      #{doLoadnum,jdbcType=INTEGER}, #{doCreatime,jdbcType=TIMESTAMP}, #{doUptime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Download">
+    insert into download
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="doId != null">
+        do_id,
+      </if>
+      <if test="doName != null">
+        do_name,
+      </if>
+      <if test="doTitle != null">
+        do_title,
+      </if>
+      <if test="doCode != null">
+        do_code,
+      </if>
+      <if test="doIntron != null">
+        do_intron,
+      </if>
+      <if test="doLoadurl != null">
+        do_loadurl,
+      </if>
+      <if test="doLoadnum != null">
+        do_loadnum,
+      </if>
+      <if test="doCreatime != null">
+        do_creatime,
+      </if>
+      <if test="doUptime != null">
+        do_uptime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="doId != null">
+        #{doId,jdbcType=INTEGER},
+      </if>
+      <if test="doName != null">
+        #{doName,jdbcType=VARCHAR},
+      </if>
+      <if test="doTitle != null">
+        #{doTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="doCode != null">
+        #{doCode,jdbcType=VARCHAR},
+      </if>
+      <if test="doIntron != null">
+        #{doIntron,jdbcType=VARCHAR},
+      </if>
+      <if test="doLoadurl != null">
+        #{doLoadurl,jdbcType=VARCHAR},
+      </if>
+      <if test="doLoadnum != null">
+        #{doLoadnum,jdbcType=INTEGER},
+      </if>
+      <if test="doCreatime != null">
+        #{doCreatime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doUptime != null">
+        #{doUptime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Download">
+    update download
+    <set>
+      <if test="doName != null">
+        do_name = #{doName,jdbcType=VARCHAR},
+      </if>
+      <if test="doTitle != null">
+        do_title = #{doTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="doCode != null">
+        do_code = #{doCode,jdbcType=VARCHAR},
+      </if>
+      <if test="doIntron != null">
+        do_intron = #{doIntron,jdbcType=VARCHAR},
+      </if>
+      <if test="doLoadurl != null">
+        do_loadurl = #{doLoadurl,jdbcType=VARCHAR},
+      </if>
+      <if test="doLoadnum != null">
+        do_loadnum = #{doLoadnum,jdbcType=INTEGER},
+      </if>
+      <if test="doCreatime != null">
+        do_creatime = #{doCreatime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doUptime != null">
+        do_uptime = #{doUptime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where do_id = #{doId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Download">
+    update download
+    set do_name = #{doName,jdbcType=VARCHAR},
+      do_title = #{doTitle,jdbcType=VARCHAR},
+      do_code = #{doCode,jdbcType=VARCHAR},
+      do_intron = #{doIntron,jdbcType=VARCHAR},
+      do_loadurl = #{doLoadurl,jdbcType=VARCHAR},
+      do_loadnum = #{doLoadnum,jdbcType=INTEGER},
+      do_creatime = #{doCreatime,jdbcType=TIMESTAMP},
+      do_uptime = #{doUptime,jdbcType=TIMESTAMP}
+    where do_id = #{doId,jdbcType=INTEGER}
+  </update>
+</mapper>
